@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Doppia Porzione"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Doppia Porzione</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -294,6 +294,31 @@ details.meal[open] > summary::after { transform: rotate(90deg); }
   .ctrl input { width: 58px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+*{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button,.day,.tab,.pitem,summary{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input{font-size:16px!important}
+:root{--bg:#FFF6E6;--surface:#FFFDF8;--ink:#2B2017;--ink-2:#594A3C;--line:#E6D3B3;--accent:#C4492F;--accent-soft:#F8DCCF;--ok:#2B7A4B;--ok-soft:#D8EEDC;--warn:#8A5600;--warn-soft:#FCE9B5;--bad:#B3261E;--bad-soft:#F9D8D2;--plate:#F4E7CF;--plate-rim:#D8C29A}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1F1812;--surface:#2A2119;--ink:#F6EBDD;--ink-2:#C9B8A3;--line:#43362A;--accent:#F08A6C;--accent-ink:#2B1209;--accent-soft:#41241A;--ok:#7BD39E;--ok-soft:#1D3A28;--warn:#F2C26B;--warn-soft:#41310F;--bad:#FF9A8E;--bad-soft:#4A1F1A;--plate:#3A2E22;--plate-rim:#5A4733}}
+.top::before{content:"";display:block;height:60px;margin:0 -16px 12px;border-radius:0 0 18px 18px;background:linear-gradient(var(--bg) 2px,transparent 2px) 0 0/28px 28px,linear-gradient(90deg,var(--bg) 2px,transparent 2px) 0 0/28px 28px,conic-gradient(#C4492F 0 25%,#F2B134 0 50%,#3E8E5F 0 75%,#2F78B5 0) 0 0/56px 56px}
+.top{padding-top:0}
+.tab[data-t=settimana]{--c:#C4492F}.tab[data-t=dispensa]{--c:#3E8E5F}.tab[data-t=spesa]{--c:#2F78B5}
+.tab{border:2px solid var(--c);color:var(--ink)}.tab[aria-current=page]{background:var(--c);color:#fff}
+.group{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--c,var(--accent));border-radius:14px;padding:12px}
+.group[data-w=Mercato]{--c:#3E8E5F}.group[data-w=Discount]{--c:#E8A317}.group[data-w=Scorte]{--c:#2F78B5}
+.gh h3{font-size:22px}
+.cat{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:700;margin:14px 0 0;padding:3px 8px;background:var(--line);border-radius:6px;align-self:flex-start}
+.cook{border-top:8px solid #F2B134}
+.madeitem.btn{grid-template-columns:52px 1fr auto;text-align:left;height:auto;width:100%;padding:8px;color:var(--ink)}
+.pitem{grid-template-columns:1fr;gap:6px;padding:12px 0}
+.pitem .top2{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.pitem .nm{font-size:18px;font-weight:700;line-height:1.2}
+.pitem .meta{font-size:14px;color:var(--ink-2);font-family:var(--f-body)}
+.pitem.low{background:var(--bad-soft);margin:0 -8px;padding:12px 8px;border-radius:10px}
+.pitem .track{height:12px}
+.ctrl{flex-wrap:wrap;gap:6px}.ctrl .pack{display:inline-block!important;font-size:13px}.ctrl input{width:80px!important}
+.ctrl .max{height:36px;padding:0 14px;border-radius:8px;border:0;background:var(--ok);color:#fff;font-weight:700}
+.rhead{display:block}
+.fchip[data-a=icolor][aria-pressed=true]{outline:3px solid var(--ink)}
 </style>
 
 <div class="wrap">
@@ -303,7 +328,7 @@ details.meal[open] > summary::after { transform: rotate(90deg); }
   </div>
   <div class="bar"><nav class="tabs" id="tabs" aria-label="Sezioni"></nav></div>
   <main id="view"></main>
-  <p class="foot" id="foot"></p>
+  <details class="group" style="margin-top:18px"><summary class="label" style="padding:6px 0">Impostazioni · icona dell'app</summary><p class="tip">Scegli emoji e colore. Poi da Safari: Condividi → Aggiungi alla schermata Home (togli prima la vecchia icona).</p><div id="emo" class="filters"></div><div id="col" class="filters" style="margin-top:8px"></div><input id="emoin" maxlength="4" placeholder="oppure scrivi un'emoji" style="margin-top:8px;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:var(--surface);color:var(--ink)"></details><p class="foot" id="foot"></p>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -357,6 +382,14 @@ const ITEMS = [
   item("parmigiano","Parmigiano grattugiato","Scorte","g",100,10),
   item("soia","Salsa di soia","Scorte","ml",150,10)
 ];
+ITEMS.push(item("marmellata","Marmellata","Discount","g",330,1,{base:40}));
+const UN={passata:["bottiglie",700,1,.5],olio:["bottiglie",1000,1,.25],soia:["bottiglie",150,1,.5],pesto:["vasetti",90,1,.5],burro:["vasetti",350,1,.5],marmellata:["vasetti",330,1,.5],yogurt:["vasetti",125,2,1],avena:["sacchetti",500,1,.5],secca:["sacchetti",100,1,.5],piselli:["buste",450,1,.5],fagiolini:["buste",450,1,.5],gamberetti:["buste",200,1,.5],parmigiano:["buste",100,1,.5],pollo:["vaschette",700,1,.5],salsicce:["vaschette",250,1,.5],pancetta:["confezioni",100,1,.5],speck:["confezioni",80,1,.5],provola:["confezioni",150,1,.5]};
+const UU={ceci:"lattine",tonno:"scatolette",sfoglia:"rotoli",pane:"filoni",uova:"uova"};
+const CATS=["Pasta e riso","Carne e salumi","Surgelati","Uova e latticini","Scatolame e sughi","Colazione e forno","Verdura","Frutta","Condimenti"];
+const CM={pasta:0,riso:0,pollo:1,salsicce:1,pancetta:1,speck:1,piselli:2,fagiolini:2,gamberetti:2,uova:3,yogurt:3,provola:3,parmigiano:3,ceci:4,tonno:4,passata:4,pesto:4,avena:5,pane:5,burro:5,secca:5,sfoglia:5,marmellata:5,frutta:7,olio:8,soia:8};
+ITEMS.forEach(function(x){const o=UN[x.id];if(o){x.ru=x.u;x.u=o[0];x.per=o[1];x.pack=o[2];x.step=o[3];x.exact=false;}if(UU[x.id])x.u=UU[x.id];x.cat=CATS[CM[x.id]===undefined?6:CM[x.id]];});
+ITEMS.find(function(x){return x.id==="tonno";}).pack=3;
+function byCat(l){const m={};l.forEach(function(x){(m[x.cat]=m[x.cat]||[]).push(x);});return CATS.filter(function(c){return m[c];}).map(function(c){return [c,m[c]];});}
 const IT = {};
 ITEMS.forEach(function (x) { IT[x.id] = x; });
 const WHERE = ["Mercato","Discount","Scorte"];
@@ -366,9 +399,9 @@ const FOODS = {
   tonno: {
     n:"Pasta e tonno", kind:"piatto", yield:2, time:20,
     uses:"Pranzo di lunedì e martedì",
-    ing:[["pasta",200],["tonno",2],["passata",200],["aglio",1],["olio",30]],
+    ing:[["pasta",280],["tonno",2],["passata",200],["aglio",1],["olio",30]],
     steps:[
-      "Lessa 200 g di pasta in acqua salata, secondo il tempo sulla confezione.",
+      "Lessa 280 g di pasta in acqua salata, secondo il tempo sulla confezione.",
       "In un'altra pentola scalda 2 cucchiai di olio con l'aglio, aggiungi la passata e cuoci 8-10 minuti.",
       "Spegni, unisci il tonno sgocciolato e mescola.",
       "Condisci la pasta. Mangia una metà e metti l'altra in un contenitore quando è tiepida."
@@ -393,9 +426,9 @@ const FOODS = {
   riso: {
     n:"Riso, ceci e zucchine", kind:"piatto", yield:2, time:30,
     uses:"Pranzo di mercoledì e giovedì",
-    ing:[["riso",180],["ceci",1],["zucchine",300],["cipolla",75],["olio",30]],
+    ing:[["riso",250],["ceci",1],["zucchine",300],["cipolla",75],["olio",30]],
     steps:[
-      "Lessa 180 g di riso per 12-14 minuti e scolalo.",
+      "Lessa 250 g di riso per 12-14 minuti e scolalo.",
       "Soffriggi mezza cipolla con l'olio, aggiungi 300 g di zucchine a dadini e cuoci 8 minuti.",
       "Unisci i ceci sgocciolati e scalda 3 minuti.",
       "Mescola tutto con il riso, sale e pepe.",
@@ -421,12 +454,12 @@ const FOODS = {
   boscaiola: {
     n:"Pasta alla boscaiola con piselli", kind:"piatto", yield:2, time:35,
     uses:"Pranzo di venerdì e sabato",
-    ing:[["pasta",200],["piselli",200],["funghi",200],["pancetta",80],["passata",150],["cipolla",75],["olio",20],["parmigiano",20]],
+    ing:[["pasta",280],["piselli",200],["funghi",200],["pancetta",80],["passata",150],["cipolla",75],["olio",20],["parmigiano",20]],
     steps:[
       "Rosola 80 g di pancetta a dadini in padella per 3-4 minuti.",
       "Aggiungi la cipolla tritata e 200 g di funghi a fette, cuoci 8 minuti.",
       "Unisci i piselli e la passata e cuoci 10 minuti.",
-      "Lessa 200 g di pasta, scolala e mescolala al sugo con il parmigiano.",
+      "Lessa 280 g di pasta, scolala e mescolala al sugo con il parmigiano.",
       "Metà nel piatto, l'altra metà in frigo."
     ],
     tip:"Senza panna il sugo viene più leggero. La passata basta.",
@@ -450,9 +483,9 @@ const FOODS = {
   pesto: {
     n:"Pasta e pesto con uovo sodo", kind:"piatto", yield:1, time:15,
     uses:"Pranzo di domenica",
-    ing:[["pasta",100],["pesto",40],["fagiolini",150],["parmigiano",15]],
+    ing:[["pasta",140],["pesto",40],["fagiolini",150],["parmigiano",15]],
     steps:[
-      "Lessa 100 g di pasta. Negli ultimi 4 minuti aggiungi 150 g di fagiolini.",
+      "Lessa 140 g di pasta. Negli ultimi 4 minuti aggiungi 150 g di fagiolini.",
       "Scola tenendo da parte un mestolo di acqua di cottura.",
       "Condisci con 40 g di pesto allungato con l'acqua e con il parmigiano.",
       "Aggiungi l'uovo sodo a spicchi."
@@ -463,22 +496,15 @@ const FOODS = {
   cantonese: {
     n:"Riso alla cantonese con gamberetti", kind:"piatto", yield:1, time:20,
     uses:"Cena di domenica",
-    ing:[["riso",90],["gamberetti",150],["piselli",50],["zucchine",150],["uova",2],["soia",15],["aglio",1],["olio",15]],
+    ing:[["riso",125],["gamberetti",150],["piselli",50],["zucchine",150],["uova",2],["soia",15],["aglio",1],["olio",15]],
     steps:[
-      "Lessa 90 g di riso, scolalo e raffreddalo sotto l'acqua.",
+      "Lessa 125 g di riso, scolalo e raffreddalo sotto l'acqua.",
       "In una padella ben calda scalda l'olio con l'aglio. Salta 150 g di gamberetti per 3 minuti, poi aggiungi zucchine a dadini e piselli per 5 minuti.",
       "Sposta tutto da un lato e strapazza 2 uova nella stessa padella.",
       "Unisci il riso e un cucchiaio di salsa di soia, salta 2 minuti."
     ],
     tip:"La salsa di soia è salata: assaggia prima di aggiungere altro sale.",
     art:{items:[["dot","#F4F1E4",44,2.4],["bar","#F28B6B",5,9],["dot","#5FA55A",11,2.8],["cube","#F2D56B",7,3.2]]}
-  },
-  uova4: {
-    n:"Uova sode (4)", kind:"prep", yield:1, time:12,
-    uses:"Colazioni di martedì e giovedì",
-    ing:[["uova",4]],
-    steps:["Metti 4 uova in acqua fredda, contale 10 minuti dal bollore, raffreddale. Conservale col guscio."],
-    tip:"", art:{items:[["dot","#F6F2E8",4,10]]}
   },
   uova1: {
     n:"Uovo sodo (1)", kind:"prep", yield:1, time:12,
@@ -493,11 +519,11 @@ const FOODS = {
     steps:["Versa lo yogurt in una ciotola, aggiungi l'avena e la frutta."],
     tip:"", art:{items:[["dot","#E0BE82",16,2.4],["cube","#D9482B",4,3.6],["cube","#8DB255",3,3.6]], bowl:true}
   },
-  pane_uova: {
-    n:"Pane integrale e uova sode", kind:"colazione", time:3,
-    ingText:["2 fette di pane integrale","2 uova sode"],
-    steps:["Taglia le uova sode a fette e mettile sul pane."],
-    tip:"Le uova sode sono quelle preparate lunedì.", art:{items:[["cube","#D8A657",2,12],["dot","#F6F2E8",2,8]]}
+  pane_marm: {
+    n:"Pane integrale e marmellata", kind:"colazione", time:2,
+    ingText:["2 fette di pane integrale","1 cucchiaio di marmellata"],
+    steps:["Spalma la marmellata sul pane."],
+    tip:"", art:{items:[["cube","#D8A657",2,12],["dot","#B5384B",3,5]]}
   },
   pane_burro: {
     n:"Pane integrale e burro d'arachidi", kind:"colazione", time:2,
@@ -534,21 +560,20 @@ const FOODS = {
 
 /* Giorni: cosa si cucina, in che ordine, cosa si mangia e cosa si conserva */
 const DAYS = [
-  { k:"lun", cook:["tonno","pollo","uova4"], time:75,
+  { k:"lun", cook:["tonno","pollo"], time:70,
     order:[
       "A metà mattina accendi il forno a 200 °C e prepara pollo, patate e broccoli in teglia (10 minuti).",
-      "Mentre cuoce (45-50 minuti) metti a bollire le 4 uova, poi prepara sugo e pasta e tonno.",
+      "Mentre cuoce (45-50 minuti) prepara il sugo e la pasta e tonno.",
       "Pranzo con la pasta appena fatta. Metti la seconda porzione in un contenitore.",
       "Cena con metà della teglia. L'altra metà va in un contenitore."
     ],
     meals:{ col:{f:"yo"}, pr:{f:"tonno"}, ce:{f:"pollo"}, sp:{f:"s_frutta_carote"} },
     store:[
       {t:"Pasta e tonno, 1 porzione", how:"Contenitore chiuso in frigo", until:"Pranzo di martedì"},
-      {t:"Pollo e patate, 1 porzione", how:"Contenitore chiuso in frigo", until:"Cena di martedì"},
-      {t:"4 uova sode", how:"Col guscio, in frigo", until:"Colazioni di martedì e giovedì"}
+      {t:"Pollo e patate, 1 porzione", how:"Contenitore chiuso in frigo", until:"Cena di martedì"}
     ] },
   { k:"mar", cook:[], time:0, order:[],
-    meals:{ col:{f:"pane_uova"}, pr:{f:"tonno", from:"lun"}, ce:{f:"pollo", from:"lun"}, sp:{f:"s_yogurt_frutta"} },
+    meals:{ col:{f:"pane_marm"}, pr:{f:"tonno", from:"lun"}, ce:{f:"pollo", from:"lun"}, sp:{f:"s_yogurt_frutta"} },
     store:[] },
   { k:"mer", cook:["riso","salsicce"], time:70,
     order:[
@@ -563,7 +588,7 @@ const DAYS = [
       {t:"Salsicce e friarielli, 1 porzione", how:"Contenitore chiuso in frigo", until:"Cena di giovedì"}
     ] },
   { k:"gio", cook:[], time:0, order:[],
-    meals:{ col:{f:"pane_uova"}, pr:{f:"riso", from:"mer"}, ce:{f:"salsicce", from:"mer"}, sp:{f:"s_frutta_finocchi"} },
+    meals:{ col:{f:"pane_marm"}, pr:{f:"riso", from:"mer"}, ce:{f:"salsicce", from:"mer"}, sp:{f:"s_frutta_finocchi"} },
     store:[] },
   { k:"ven", cook:["boscaiola","torta","uova1"], time:80,
     order:[
@@ -601,6 +626,9 @@ DAYS.forEach(function (d) {
   });
 });
 
+ITEMS.forEach(function(x){NEED[x.id]=Math.round(NEED[x.id]/(x.per||1)*1000)/1000;});
+function toU(id,q){return Math.round(q/(IT[id].per||1)*1000)/1000;}
+function recFmt(id,q){const it=IT[id];return fmt(q,it.per>1?it.ru:it.u);}
 /* ---------- utilità ---------- */
 function esc(s) {
   return String(s).replace(/[&<>"']/g, function (c) {
@@ -608,9 +636,12 @@ function esc(s) {
   });
 }
 function num(n) { return String(Math.round(n * 100) / 100).replace(".", ","); }
+const SG={uova:"uovo",scatolette:"scatoletta",bottiglie:"bottiglia",lattine:"lattina",buste:"busta",vaschette:"vaschetta",confezioni:"confezione",rotoli:"rotolo",vasetti:"vasetto",sacchetti:"sacchetto",filoni:"filone"};
+function frac(q){const r=Math.round(q*4)/4;if(q>0&&r===0)return "meno di ¼";const w=Math.floor(r),f=r-w,t=f===.25?"¼":f===.5?"½":f===.75?"¾":"";return (w?w:"")+(w&&t?" ":"")+t||"0";}
 function fmt(q, u) {
   if (u === "g" && q >= 1000) return num(q / 1000) + " kg";
   if (u === "ml" && q >= 1000) return num(q / 1000) + " l";
+  if (SG[u]) return frac(q) + " " + (q > 0 && q <= 1 ? SG[u] : u);
   return num(q) + " " + u;
 }
 function mondayISO() {
@@ -721,6 +752,7 @@ function cookedInfo(k) {
   if (!raw) return null;
   try { const c = JSON.parse(raw); return c && c.w === WEEK ? c : null; } catch (e) { return null; }
 }
+function cookedKey(k, fid) { return cookedInfo(k + "_" + fid) ? k + "_" + fid : (cookedInfo(k) ? k : null); }
 function sessionIngredients(day) {
   const agg = {};
   day.cook.forEach(function (fid) {
@@ -728,16 +760,15 @@ function sessionIngredients(day) {
   });
   return agg;
 }
-function markCooked(k) {
-  const day = DAYS.find(function (d) { return d.k === k; });
-  const agg = sessionIngredients(day);
+function markCooked(k, fid) {
+  const agg = {}; FOODS[fid].ing.forEach(function (p) { agg[p[0]] = p[1]; });
   const used = {}, pantry = {};
   Object.keys(agg).forEach(function (id) {
-    const take = Math.min(have(id), agg[id]);
+    const take = Math.min(have(id), toU(id, agg[id]));
     used[id] = take;
     pantry[id] = Math.round((have(id) - take) * 100) / 100;
   });
-  const cooked = {}; cooked[k] = JSON.stringify({ w: WEEK, d: used });
+  const cooked = {}; cooked[k + "_" + fid] = JSON.stringify({ w: WEEK, d: used });
   commit({ pantry: pantry, cooked: cooked });
   toast("Dispensa aggiornata");
 }
@@ -801,26 +832,26 @@ function art(id, size) {
 }
 
 /* ---------- viste ---------- */
-const ui = { tab: "settimana", day: todayKey(), filter: "tutti", open: {} };
+const ui = { tab: "settimana", day: todayKey(), filter: "tutti", open: {}, dish: null };
 
 function ingredientRows(agg) {
   return Object.keys(agg).map(function (id) {
-    const it = IT[id], q = agg[id], h = have(id);
+    const it = IT[id], q = toU(id, agg[id]), h = have(id);
     const chip = h >= q ? '<span class="chip ok">ce l\'hai</span>' : '<span class="chip ' + (h > 0 ? "warn" : "bad") + '">mancano ' + esc(fmt(q - h, it.u)) + "</span>";
-    return '<div class="ing"><span>' + esc(it.n) + '</span><span class="q">' + esc(fmt(q, it.u)) + "</span>" + chip + "</div>";
+    return '<div class="ing"><span>' + esc(it.n) + '</span><span class="q">' + esc(recFmt(id, agg[id])) + "</span>" + chip + "</div>";
   }).join("");
 }
 
 function recipe(fid, ctx) {
   const f = FOODS[fid];
-  let h = '<div class="recipe"><div class="rhead">' + art(fid, 110) + '<div class="rmeta">';
+  let h = '<div class="recipe"><div class="rhead"><div class="rmeta">';
   if (f.kind === "piatto") h += '<span class="t">' + (f.yield === 2 ? "Dose doppia: 2 pasti" : "1 pasto") + " · circa " + f.time + " min</span>";
   else h += '<span class="t">circa ' + f.time + " min</span>";
   if (f.tip) h += '<p class="tip">' + esc(f.tip) + "</p>";
   h += "</div></div>";
   h += '<div><div class="label" style="margin-bottom:4px">' + (f.yield === 2 ? "Ingredienti per tutta la cottura" : "Ingredienti") + '</div><ul class="list">';
   if (f.ing) {
-    f.ing.forEach(function (p) { h += "<li><span>" + esc(IT[p[0]].n) + '</span><span class="q">' + esc(fmt(p[1], IT[p[0]].u)) + "</span></li>"; });
+    f.ing.forEach(function (p) { h += "<li><span>" + esc(IT[p[0]].n) + '</span><span class="q">' + esc(recFmt(p[0], p[1])) + "</span></li>"; });
   } else {
     f.ingText.forEach(function (t) { h += "<li><span>" + esc(t) + "</span></li>"; });
   }
@@ -838,6 +869,18 @@ function recipe(fid, ctx) {
   return h + "</div>";
 }
 
+function dishView(k, fid) {
+  const f = FOODS[fid], agg = {}, dn = cookedKey(k, fid);
+  f.ing.forEach(function (p) { agg[p[0]] = p[1]; });
+  const miss = Object.keys(agg).filter(function (id) { return have(id) < toU(id, agg[id]); }).length;
+  let h = '<button class="btn ghost small" data-a="back">‹ Le ricette di oggi</button><div class="row1"><h3>' + esc(f.n) + '</h3><span class="time">circa ' + f.time + ' min</span></div>';
+  h += '<div class="ings">' + ingredientRows(agg) + "</div>";
+  h += '<ol class="steps">' + f.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>";
+  if (f.tip) h += '<p class="tip">' + esc(f.tip) + "</p>";
+  if (!dn && miss > 0) h += '<div class="note">Mancano ' + miss + ' ingredienti. <a href="#spesa" data-a="tab" data-t="spesa">Apri la spesa</a></div>';
+  h += dn ? '<div class="row1"><span class="chip ok">Cucinato: dispensa aggiornata</span><button class="btn ghost small" data-a="undo" data-key="' + dn + '">Annulla</button></div>' : '<button class="btn" data-a="cooked" data-k="' + k + '" data-f="' + fid + '">Ho cucinato: togli dalla dispensa</button>';
+  return h;
+}
 function viewDay(k) {
   const d = DAYS.find(function (x) { return x.k === k; });
   const isToday = k === todayKey();
@@ -847,24 +890,16 @@ function viewDay(k) {
   h += "</div>";
 
   if (d.cook.length) {
-    const agg = sessionIngredients(d);
-    const done = cookedInfo(k);
-    const miss = Object.keys(agg).filter(function (id) { return have(id) < agg[id]; }).length;
-    h += '<section class="cook" aria-label="Cucina"><div class="row1"><h3>' + (isToday ? "Oggi cucini" : "Qui cucini") + '</h3><span class="time">circa ' + d.time + " min</span></div>";
-    h += '<div class="made">';
-    d.cook.forEach(function (fid) {
-      const f = FOODS[fid];
-      h += '<div class="madeitem">' + art(fid, 52) + "<div><b>" + esc(f.n) + (f.yield === 2 ? " ×2" : "") + "</b><span>" + esc(f.uses) + "</span></div></div>";
-    });
-    h += "</div>";
-    h += '<div><div class="label" style="margin-bottom:6px">Ordine di lavoro</div><ol class="steps">';
-    d.order.forEach(function (s) { h += "<li>" + esc(s) + "</li>"; });
-    h += "</ol></div>";
-    h += '<div><div class="label" style="margin-bottom:6px">Ingredienti</div><div class="ings">' + ingredientRows(agg) + "</div></div>";
-    if (!done && miss > 0) h += '<div class="note">Per questa cottura mancano ' + miss + ' ingredienti. <a href="#spesa" data-a="tab" data-t="spesa">Apri la spesa</a></div>';
-    h += done
-      ? '<div class="row1"><span class="chip ok">Cucinato: dispensa aggiornata</span><button class="btn ghost small" data-a="undo" data-k="' + k + '">Annulla</button></div>'
-      : '<button class="btn" data-a="cooked" data-k="' + k + '">Ho cucinato: togli dalla dispensa</button>';
+    h += '<section class="cook" aria-label="Cucina">';
+    if (ui.dish && d.cook.indexOf(ui.dish) >= 0) h += dishView(k, ui.dish);
+    else {
+      h += '<div class="row1"><h3>' + (isToday ? "Oggi cucini" : "Qui cucini") + '</h3><span class="time">circa ' + d.time + ' min</span></div><p class="tip">Scegli cosa preparare:</p><div class="made">';
+      d.cook.forEach(function (fid) {
+        const f = FOODS[fid], dn = cookedKey(k, fid);
+        h += '<button class="madeitem btn ghost" data-a="dish" data-f="' + fid + '">' + art(fid, 52) + "<div><b>" + esc(f.n) + (f.yield === 2 ? " ×2" : "") + "</b><span>" + esc(f.uses) + "</span></div>" + (dn ? '<span class="chip ok">fatto</span>' : "<span>›</span>") + "</button>";
+      });
+      h += '</div><details><summary class="label">Ordine di lavoro</summary><ol class="steps" style="margin-top:8px">' + d.order.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol></details>";
+    }
     h += "</section>";
   } else {
     h += '<p class="nothing">Oggi non cucini: scaldi quello che hai conservato.</p>';
@@ -909,16 +944,16 @@ function viewWeek() {
 }
 
 function pitem(it) {
-  const h = have(it.id), n = NEED[it.id];
-  const ratio = Math.min(1, n > 0 ? h / n : 1);
-  const color = h >= n ? "var(--ok)" : (h > 0 ? "var(--warn)" : "var(--bad)");
-  const status = h >= n ? "ok" : (h > 0 ? "poco" : "manca");
-  return '<div class="pitem"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">' + esc(fmt(h, it.u)) + " di " + esc(fmt(n, it.u)) + " a settimana · " + status + "</div></div>" +
-    '<div class="ctrl"><button class="step" data-a="dec" data-i="' + it.id + '" aria-label="Togli da ' + esc(it.n) + '">−</button>' +
-    '<input type="number" inputmode="decimal" min="0" step="any" value="' + h + '" data-a="set" data-i="' + it.id + '" aria-label="Quantità di ' + esc(it.n) + ' in ' + it.u + '">' +
-    '<button class="step" data-a="inc" data-i="' + it.id + '" aria-label="Aggiungi a ' + esc(it.n) + '">+</button>' +
-    '<button class="pack" data-a="pack" data-i="' + it.id + '" aria-label="Aggiungi una confezione di ' + esc(it.n) + '">+' + esc(fmt(it.pack, it.u)) + "</button></div>" +
-    '<div class="track"><i style="width:' + Math.round(ratio * 100) + "%;background:" + color + '"></i></div></div>';
+  const h = have(it.id), n = NEED[it.id], r = n > 0 ? h / n : 1, m = missing(it.id);
+  const st = h <= 0 ? ["finito","bad"] : r < 0.5 ? ["poco","bad"] : r < 1 ? ["quasi finito","warn"] : ["ok","ok"];
+  return '<div class="pitem' + (st[1] === "bad" ? " low" : "") + '"><div class="top2"><div class="nm">' + esc(it.n) + '</div><span class="chip ' + st[1] + '">' + st[0] + "</span></div>" +
+    '<div class="meta">Hai ' + esc(fmt(h, it.u)) + " · a settimana ne usi " + esc(fmt(n, it.u)) + "</div>" +
+    '<div class="track"><i style="width:' + Math.round(Math.min(1, r) * 100) + "%;background:var(--" + st[1] + ')"></i></div>' +
+    '<div class="ctrl"><button class="step" data-a="dec" data-i="' + it.id + '" aria-label="Togli">−</button>' +
+    '<input type="number" inputmode="decimal" min="0" step="any" value="' + h + '" data-a="set" data-i="' + it.id + '" aria-label="Quantità di ' + esc(it.n) + '">' +
+    '<button class="step" data-a="inc" data-i="' + it.id + '" aria-label="Aggiungi">+</button>' +
+    '<button class="pack" data-a="pack" data-i="' + it.id + '">+' + esc(fmt(it.pack, it.u)) + "</button>" +
+    (m > 0 ? '<button class="max" data-a="max" data-i="' + it.id + '">Max</button>' : "") + "</div></div>";
 }
 
 function viewPantry() {
@@ -939,7 +974,7 @@ function viewPantry() {
       return true;
     });
     if (!list.length) return;
-    h += '<section class="group"><div class="gh"><h3>' + w + '</h3><span class="label">' + list.length + " voci</span></div>" + list.map(pitem).join("") + "</section>";
+    h += '<section class="group" data-w="' + w + '"><div class="gh"><h3>' + w + '</h3><span class="label">' + list.length + " voci</span></div>" + byCat(list).map(function (c) { return '<div class="cat">' + c[0] + "</div>" + c[1].map(pitem).join(""); }).join("") + "</section>";
   });
   return h;
 }
@@ -951,11 +986,11 @@ function viewShop() {
   WHERE.forEach(function (w) {
     const list = miss.filter(function (x) { return x.where === w; });
     if (!list.length) return;
-    h += '<section class="group"><div class="gh"><h3>' + w + '</h3><button class="btn ghost small" data-a="buyall" data-w="' + w + '">Tutto comprato</button></div>';
-    list.forEach(function (it) {
+    h += '<section class="group" data-w="' + w + '"><div class="gh"><h3>' + w + '</h3><button class="btn ghost small" data-a="buyall" data-w="' + w + '">Tutto comprato</button></div>';
+    byCat(list).forEach(function (c) { h += '<div class="cat">' + c[0] + "</div>"; c[1].forEach(function (it) {
       const b = buyQty(it), m = missing(it.id);
       h += '<div class="buyrow"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">Compra ' + esc(fmt(b, it.u)) + (b !== m ? " (ti servono " + esc(fmt(m, it.u)) + ")" : "") + '</div></div><button class="btn ghost small" data-a="buy" data-i="' + it.id + '">Comprato</button></div>';
-    });
+    }); });
     h += "</section>";
   });
   return h;
@@ -990,7 +1025,7 @@ function applyHash() {
 }
 function go(tab, day) {
   ui.tab = tab;
-  if (day) ui.day = day;
+  if (day) { if (day !== ui.day) ui.dish = null; ui.day = day; }
   try { location.hash = tab === "settimana" ? ui.day : tab; } catch (e) {}
   render();
 }
@@ -1059,8 +1094,13 @@ document.addEventListener("click", function (e) {
   const a = t.dataset.a;
   if (a === "tab") { e.preventDefault(); go(t.dataset.t); window.scrollTo(0, 0); }
   else if (a === "day") go("settimana", t.dataset.k);
-  else if (a === "cooked") markCooked(t.dataset.k);
-  else if (a === "undo") undoCooked(t.dataset.k);
+  else if (a === "cooked") markCooked(t.dataset.k, t.dataset.f);
+  else if (a === "undo") undoCooked(t.dataset.key);
+  else if (a === "dish") { ui.dish = t.dataset.f; render(); window.scrollTo(0, 0); }
+  else if (a === "back") { ui.dish = null; render(); }
+  else if (a === "max") { commit({ pantry: buy(IT[t.dataset.i]) }); }
+  else if (a === "iemoji") { IC.e = t.dataset.v; applyIcon(true); }
+  else if (a === "icolor") { IC.c = t.dataset.v; applyIcon(true); }
   else if (a === "filter") { ui.filter = t.dataset.v; render(); }
   else if (a === "inc" || a === "dec") {
     const it = IT[t.dataset.i];
@@ -1080,9 +1120,27 @@ document.addEventListener("click", function (e) {
 document.addEventListener("change", function (e) {
   const t = e.target;
   if (!t || !t.dataset) return;
-  if (t.dataset.a === "set") setHave(t.dataset.i, t.value === "" ? 0 : t.value);
+  if (t.id === "emoin" && t.value.trim()) { IC.e = t.value.trim(); applyIcon(true); }
+  else if (t.dataset.a === "set") setHave(t.dataset.i, t.value === "" ? 0 : t.value);
   else if (t.dataset.a === "photo") addPhoto(t.dataset.f, t.files && t.files[0]);
 });
+
+/* ---------- icona ---------- */
+const EMO = ["🍝","🍚","🥘","🍳","🥕","🍅","🥑","🍕","🍲","🥗","🌶️","🧅"], COLS = ["C4492F","3E8E5F","2F78B5","E8A317","8E5BA8","2B2017"];
+const IC = { e: "🍝", c: "C4492F" };
+try { const p = new URLSearchParams(location.search), l = JSON.parse(localStorage.getItem("dp-icon") || "null"); if (l) { IC.e = l.e; IC.c = l.c; } if (p.get("i")) IC.e = p.get("i"); if (p.get("c")) IC.c = p.get("c"); } catch (e) {}
+function applyIcon(save) {
+  const cv = document.createElement("canvas"); cv.width = cv.height = 180;
+  const x = cv.getContext("2d"); x.fillStyle = "#" + IC.c; x.fillRect(0, 0, 180, 180);
+  x.font = '110px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(IC.e, 90, 98);
+  let l = document.querySelector('link[rel="apple-touch-icon"]');
+  if (!l) { l = document.createElement("link"); l.rel = "apple-touch-icon"; document.head.appendChild(l); }
+  l.href = cv.toDataURL("image/png");
+  if (save) { try { localStorage.setItem("dp-icon", JSON.stringify(IC)); history.replaceState(null, "", "?i=" + encodeURIComponent(IC.e) + "&c=" + IC.c + location.hash); } catch (e) {} toast("Icona pronta: ora aggiungi l'app alla Home da Safari"); }
+  document.getElementById("emo").innerHTML = EMO.map(function (e) { return '<button class="fchip" data-a="iemoji" data-v="' + e + '" aria-pressed="' + (e === IC.e) + '">' + e + "</button>"; }).join("");
+  document.getElementById("col").innerHTML = COLS.map(function (c) { return '<button class="fchip" data-a="icolor" data-v="' + c + '" aria-pressed="' + (c === IC.c) + '" aria-label="Colore" style="background:#' + c + ';width:44px"></button>'; }).join("");
+}
+applyIcon(false);
 
 /* ---------- avvio ---------- */
 const local = loadLocal();
