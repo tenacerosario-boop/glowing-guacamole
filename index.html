@@ -306,7 +306,7 @@ input{font-size:16px!important}
 .group{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--c,var(--accent));border-radius:14px;padding:12px}
 .group[data-w=Mercato]{--c:#3E8E5F}.group[data-w=Discount]{--c:#E8A317}.group[data-w=Scorte]{--c:#2F78B5}
 .gh h3{font-size:22px}
-.cat{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:700;margin:14px 0 0;padding:3px 8px;background:var(--line);border-radius:6px;align-self:flex-start}
+.cat{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:700;margin:14px 0 6px;padding:4px 10px;background:#8E5BA8;border-radius:6px;align-self:flex-start}
 .cook{border-top:8px solid #F2B134}
 .madeitem.btn{grid-template-columns:52px 1fr auto;text-align:left;height:auto;width:100%;padding:8px;color:var(--ink)}
 .pitem{grid-template-columns:1fr;gap:6px;padding:12px 0}
@@ -319,8 +319,8 @@ input{font-size:16px!important}
 .ctrl .max{height:36px;padding:0 14px;border-radius:8px;border:0;background:var(--ok);color:#fff;font-weight:700}
 .rhead{display:block}
 .pager{overflow:hidden}.pager,.pager *{touch-action:pan-y}
-.rail{display:flex;width:300%;align-items:flex-start}
-.pane{width:33.3333%;flex:none;max-height:100vh;overflow:hidden}.pane.on{max-height:none;overflow:visible}
+.rail{display:flex;gap:24px;width:calc(300% + 48px);align-items:flex-start}
+.pane{width:calc((100% - 48px)/3);flex:none;max-height:100vh;overflow:hidden}.pane.on{max-height:none;overflow:visible}
 .ml-col,.ml-pr,.ml-ce,.ml-sp{font-weight:700}
 .ml-col{color:#B7791F}.ml-pr{color:#2B7A4B}.ml-ce{color:#C4492F}.ml-sp{color:#8E5BA8}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .ml-col{color:#F2C26B}:root:not([data-theme=light]) .ml-pr{color:#7BD39E}:root:not([data-theme=light]) .ml-ce{color:#F08A6C}:root:not([data-theme=light]) .ml-sp{color:#C9A0E0}}
@@ -328,6 +328,14 @@ input{font-size:16px!important}
 .pitem.s-ok{background:var(--ok-soft)}.pitem.s-warn{background:var(--warn-soft)}.pitem.s-bad{background:var(--bad-soft)}
 .pitem .track{background:rgba(0,0,0,.14)}
 .ctrl input{text-align:center}
+.cat[data-c="0"]{background:#8E5BA8}.cat[data-c="1"]{background:#B5384B}.cat[data-c="2"]{background:#2F78B5}.cat[data-c="3"]{background:#C28A00}.cat[data-c="4"]{background:#3E8E5F}.cat[data-c="5"]{background:#C4642F}.cat[data-c="6"]{background:#5A7D2B}.cat[data-c="7"]{background:#D0487A}.cat[data-c="8"]{background:#5B6AD0}
+.recipe{gap:22px;padding:8px 0 22px}
+.rsec{display:flex;flex-direction:column}
+.rh{font-family:var(--f-display);font-size:17px;font-weight:700;color:var(--ink);padding-bottom:6px;margin-bottom:8px;border-bottom:2px solid var(--accent)}
+.recipe ul.list li{padding:9px 0}
+.recipe ol.steps{gap:12px}
+.tipbox{background:var(--warn-soft);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:14px;display:flex;flex-direction:column;gap:2px}
+.tipbox b{font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--warn)}
 .fchip[data-a=icolor][aria-pressed=true]{outline:3px solid var(--ink)}
 </style>
 
@@ -337,7 +345,7 @@ input{font-size:16px!important}
     <p class="sub">Cucini quattro volte, mangi tutta la settimana.</p>
   </div>
   <div class="bar"><nav class="tabs" id="tabs" aria-label="Sezioni"></nav></div>
-  <div class="pager" id="pager"><div class="rail" id="rail"><section class="pane on" id="p0"><main id="v0"></main><details class="group" id="settings" style="margin-top:18px;padding:4px 8px;font-size:10px"><summary class="label" style="padding:2px 0;font-size:9px">Impostazioni · icona dell'app</summary><p class="tip">Scegli emoji e colore. Poi da Safari: Condividi → Aggiungi alla schermata Home (togli prima la vecchia icona).</p><div id="emo" class="filters"></div><div id="col" class="filters" style="margin-top:8px"></div><input id="emoin" maxlength="4" placeholder="oppure scrivi un'emoji" style="margin-top:8px;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:var(--surface);color:var(--ink)"></details></section><section class="pane" id="p1"><main id="v1"></main></section><section class="pane" id="p2"><main id="v2"></main></section></div></div>
+  <div class="pager" id="pager"><div class="rail" id="rail"><section class="pane on" id="p0"><main id="v0"></main><details class="group" id="settings" style="margin-top:72px;padding:4px 8px;font-size:10px"><summary class="label" style="padding:2px 0;font-size:9px">Impostazioni · icona dell'app</summary><p class="tip">Scegli emoji e colore. Poi da Safari: Condividi → Aggiungi alla schermata Home (togli prima la vecchia icona).</p><div id="emo" class="filters"></div><div id="col" class="filters" style="margin-top:8px"></div><input id="emoin" maxlength="4" placeholder="oppure scrivi un'emoji" style="margin-top:8px;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:var(--surface);color:var(--ink)"></details></section><section class="pane" id="p1"><main id="v1"></main></section><section class="pane" id="p2"><main id="v2"></main></section></div></div>
   <p class="foot" id="foot"></p>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -368,15 +376,15 @@ const ITEMS = [
   item("uova","Uova","Discount","pz",12,1),
   item("pasta","Pasta (integrale se riesci)","Discount","g",500,50),
   item("riso","Riso","Discount","g",500,50),
-  item("ceci","Ceci cotti (lattina da 400 g)","Discount","pz",1,1),
+  item("ceci","Ceci (lattina da 400 g)","Discount","pz",1,1),
   item("tonno","Tonno in scatola (80 g)","Discount","pz",2,1),
   item("passata","Passata di pomodoro","Discount","g",700,100),
   item("piselli","Piselli surgelati","Discount","g",450,50),
   item("fagiolini","Fagiolini surgelati","Discount","g",450,50),
   item("gamberetti","Gamberetti surgelati","Discount","g",200,50),
-  item("pollo","Sovracosce di pollo","Discount","g",700,100,{exact:true}),
+  item("pollo","Pollo","Discount","g",700,100,{exact:true}),
   item("salsicce","Salsicce","Discount","g",250,50,{exact:true}),
-  item("pancetta","Pancetta o guanciale","Discount","g",100,20,{exact:true}),
+  item("pancetta","Pancetta","Discount","g",100,20,{exact:true}),
   item("speck","Speck","Discount","g",80,20,{exact:true}),
   item("provola","Provola","Discount","g",150,50,{exact:true}),
   item("sfoglia","Pasta sfoglia (rotolo)","Discount","pz",1,1),
@@ -393,11 +401,13 @@ const ITEMS = [
   item("soia","Salsa di soia","Scorte","ml",150,10)
 ];
 ITEMS.push(item("marmellata","Marmellata","Discount","g",330,1,{base:40}));
-const UN={passata:["bottiglie",700,1,.5],olio:["bottiglie",1000,1,.25],soia:["bottiglie",150,1,.5],pesto:["vasetti",90,1,.5],burro:["vasetti",350,1,.5],marmellata:["vasetti",330,1,.5],yogurt:["vasetti",125,2,1],avena:["sacchetti",500,1,.5],secca:["sacchetti",100,1,.5],piselli:["buste",450,1,.5],fagiolini:["buste",450,1,.5],gamberetti:["buste",200,1,.5],parmigiano:["buste",100,1,.5],pollo:["vaschette",700,1,.5],salsicce:["vaschette",250,1,.5],pancetta:["confezioni",100,1,.5],speck:["confezioni",80,1,.5],provola:["confezioni",150,1,.5]};
+const UN={passata:["bottiglie",700,1,.5],olio:["bottiglie",1000,1,.25],soia:["bottiglie",150,1,.5],pesto:["vasetti",90,1,.5],burro:["vasetti",350,1,.5],marmellata:["vasetti",330,1,.5],yogurt:["vasetti",125,2,1],avena:["sacchetti",500,1,.5],secca:["sacchetti",100,1,.5],piselli:["buste",450,1,.5],fagiolini:["buste",450,1,.5],gamberetti:["buste",200,1,.5],parmigiano:["buste",100,1,.5],pancetta:["confezioni",100,1,.5],speck:["confezioni",80,1,.5],provola:["confezioni",150,1,.5]};
 const UU={ceci:"lattine",tonno:"scatolette",sfoglia:"rotoli",pane:"filoni",uova:"uova"};
 const CATS=["Pasta e riso","Carne e salumi","Surgelati","Uova e latticini","Scatolame e sughi","Colazione e forno","Verdura","Frutta","Condimenti"];
 const CM={pasta:0,riso:0,pollo:1,salsicce:1,pancetta:1,speck:1,piselli:2,fagiolini:2,gamberetti:2,uova:3,yogurt:3,provola:3,parmigiano:3,ceci:4,tonno:4,passata:4,pesto:4,avena:5,pane:5,burro:5,secca:5,sfoglia:5,marmellata:5,frutta:7,olio:8,soia:8};
-ITEMS.forEach(function(x){const o=UN[x.id];if(o){x.ru=x.u;x.u=o[0];x.per=o[1];x.pack=o[2];x.step=o[3];x.exact=false;}if(UU[x.id])x.u=UU[x.id];x.cat=CATS[CM[x.id]===undefined?6:CM[x.id]];});
+const PCT={piselli:1,fagiolini:1,gamberetti:1,provola:1,passata:1,pesto:1,parmigiano:1};
+const MAXOV={pasta:2000,riso:2000,pollo:800,salsicce:500,pancetta:2,ceci:4,tonno:4};
+ITEMS.forEach(function(x){const o=UN[x.id];if(o){x.ru=x.u;x.u=o[0];x.per=o[1];x.pack=o[2];x.step=o[3];x.exact=false;if(PCT[x.id]){x.u="%";x.per=o[1]/100;x.pack=100;x.step=10;}}if(UU[x.id])x.u=UU[x.id];x.cat=CATS[CM[x.id]===undefined?6:CM[x.id]];});
 ITEMS.find(function(x){return x.id==="tonno";}).pack=3;
 function byCat(l){const m={};l.forEach(function(x){(m[x.cat]=m[x.cat]||[]).push(x);});return CATS.filter(function(c){return m[c];}).map(function(c){return [c,m[c]];});}
 const IT = {};
@@ -638,7 +648,7 @@ DAYS.forEach(function (d) {
 
 ITEMS.forEach(function(x){NEED[x.id]=Math.round(NEED[x.id]/(x.per||1)*1000)/1000;});
 function toU(id,q){return Math.round(q/(IT[id].per||1)*1000)/1000;}
-function recFmt(id,q){const it=IT[id];return fmt(q,it.per>1?it.ru:it.u);}
+function recFmt(id,q){const it=IT[id];return fmt(q,it.per?it.ru:it.u);}
 /* ---------- utilità ---------- */
 function esc(s) {
   return String(s).replace(/[&<>"']/g, function (c) {
@@ -649,6 +659,7 @@ function num(n) { return String(Math.round(n * 100) / 100).replace(".", ","); }
 const SG={uova:"uovo",scatolette:"scatoletta",bottiglie:"bottiglia",lattine:"lattina",buste:"busta",vaschette:"vaschetta",confezioni:"confezione",rotoli:"rotolo",vasetti:"vasetto",sacchetti:"sacchetto",filoni:"filone"};
 function frac(q){const r=Math.round(q*4)/4;if(q>0&&r===0)return "meno di ¼";const w=Math.floor(r),f=r-w,t=f===.25?"¼":f===.5?"½":f===.75?"¾":"";return (w?w:"")+(w&&t?" ":"")+t||"0";}
 function fmt(q, u) {
+  if (u === "%") return Math.round(q) + "%";
   if (u === "g" && q >= 1000) return num(q / 1000) + " kg";
   if (u === "ml" && q >= 1000) return num(q / 1000) + " l";
   if (SG[u]) return frac(q) + " " + (q > 0 && q <= 1 ? SG[u] : u);
@@ -854,12 +865,9 @@ function ingredientRows(agg) {
 
 function recipe(fid, ctx) {
   const f = FOODS[fid];
-  let h = '<div class="recipe"><div class="rhead"><div class="rmeta">';
-  if (f.kind === "piatto") h += '<span class="t">' + (f.yield === 2 ? "Dose doppia: 2 pasti" : "1 pasto") + " · circa " + f.time + " min</span>";
-  else h += '<span class="t">circa ' + f.time + " min</span>";
-  if (f.tip) h += '<p class="tip">' + esc(f.tip) + "</p>";
-  h += "</div></div>";
-  h += '<div><div class="label" style="margin-bottom:4px">' + (f.yield === 2 ? "Ingredienti per tutta la cottura" : "Ingredienti") + '</div><ul class="list">';
+  let h = '<div class="recipe">';
+  if (f.kind === "piatto" && f.yield === 2) h += '<div><span class="pill">Dose ×2</span></div>';
+  h += '<div class="rsec"><div class="rh">Ingredienti</div><ul class="list">';
   if (f.ing) {
     f.ing.forEach(function (p) { h += "<li><span>" + esc(IT[p[0]].n) + '</span><span class="q">' + esc(recFmt(p[0], p[1])) + "</span></li>"; });
   } else {
@@ -867,10 +875,11 @@ function recipe(fid, ctx) {
   }
   h += "</ul></div>";
   if (f.steps.length) {
-    h += '<div><div class="label" style="margin-bottom:6px">Come si fa</div><ol class="steps">';
+    h += '<div class="rsec"><div class="rh">Come si fa</div><ol class="steps">';
     f.steps.forEach(function (s) { h += "<li>" + esc(s) + "</li>"; });
     h += "</ol></div>";
   }
+  if (f.tip) h += '<p class="tipbox"><b>Consiglio</b>' + esc(f.tip) + "</p>";
   if (f.kind === "piatto" && assetsNS && Persist.mode === "db") {
     h += '<div class="photoact"><label class="btn ghost small" for="ph-' + ctx + '">' + (state.photos[fid] ? "Cambia la tua foto" : "Aggiungi la tua foto") + '</label><input type="file" accept="image/*" id="ph-' + ctx + '" data-a="photo" data-f="' + fid + '">';
     if (state.photos[fid]) h += '<button class="btn ghost small" data-a="unphoto" data-f="' + fid + '">Usa l\'illustrazione</button>';
@@ -946,7 +955,7 @@ function viewWeek() {
 
 const STEPS = (function () { try { return JSON.parse(localStorage.getItem("dp-steps") || "{}") || {}; } catch (e) { return {}; } })();
 function stepOf(it) { return STEPS[it.id] > 0 ? STEPS[it.id] : it.step; }
-function maxOf(it) { return it.exact ? NEED[it.id] : Math.round(Math.ceil(NEED[it.id] / it.pack - 1e-9) * it.pack * 1000) / 1000; }
+function maxOf(it) { if (MAXOV[it.id]) return MAXOV[it.id]; return it.exact ? NEED[it.id] : Math.round(Math.ceil(NEED[it.id] / it.pack - 1e-9) * it.pack * 1000) / 1000; }
 function pitem(it) {
   const h = have(it.id), mx = maxOf(it), r = mx > 0 ? h / mx : 1;
   const st = h <= 0 ? ["finito","bad"] : r < 0.35 ? ["quasi finito","warn"] : ["ok","ok"];
@@ -977,7 +986,7 @@ function viewPantry() {
       return true;
     });
     if (!list.length) return;
-    h += '<section class="group" data-w="' + w + '"><div class="gh"><h3>' + w + '</h3><span class="label">' + list.length + " voci</span></div>" + byCat(list).map(function (c) { return '<div class="cat">' + c[0] + "</div>" + c[1].map(pitem).join(""); }).join("") + "</section>";
+    h += '<section class="group" data-w="' + w + '"><div class="gh"><h3>' + w + '</h3><span class="label">' + list.length + " voci</span></div>" + byCat(list).map(function (c) { return '<div class="cat" data-c="' + CATS.indexOf(c[0]) + '">' + c[0] + "</div>" + c[1].map(pitem).join(""); }).join("") + "</section>";
   });
   return h;
 }
@@ -990,9 +999,9 @@ function viewShop() {
     const list = miss.filter(function (x) { return x.where === w; });
     if (!list.length) return;
     h += '<section class="group" data-w="' + w + '"><div class="gh"><h3>' + w + '</h3><button class="btn ghost small" data-a="buyall" data-w="' + w + '">Tutto comprato</button></div>';
-    byCat(list).forEach(function (c) { h += '<div class="cat">' + c[0] + "</div>"; c[1].forEach(function (it) {
+    byCat(list).forEach(function (c) { h += '<div class="cat" data-c="' + CATS.indexOf(c[0]) + '">' + c[0] + "</div>"; c[1].forEach(function (it) {
       const b = buyQty(it), m = missing(it.id);
-      h += '<div class="buyrow"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">Compra ' + esc(fmt(b, it.u)) + (b !== m ? " (ti servono " + esc(fmt(m, it.u)) + ")" : "") + '</div></div><button class="btn ghost small" data-a="buy" data-i="' + it.id + '">Comprato</button></div>';
+      h += '<div class="buyrow"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">Compra ' + (it.u === "%" ? "1 confezione (ti serve il " + esc(fmt(m, it.u)) + ")" : esc(fmt(b, it.u)) + (b !== m ? " (ti servono " + esc(fmt(m, it.u)) + ")" : "")) + '</div></div><button class="btn ghost small" data-a="buy" data-i="' + it.id + '">Comprato</button></div>';
     }); });
     h += "</section>";
   });
@@ -1053,7 +1062,7 @@ function shopText() {
     const list = ITEMS.filter(function (x) { return x.where === w && missing(x.id) > 0; });
     if (!list.length) return;
     out.push(w + ":");
-    list.forEach(function (it) { out.push("- " + it.n + ": " + fmt(buyQty(it), it.u)); });
+    list.forEach(function (it) { out.push("- " + it.n + ": " + (it.u === "%" ? "1 confezione" : fmt(buyQty(it), it.u))); });
     out.push("");
   });
   return out.join("\n").trim();
@@ -1151,7 +1160,7 @@ const TABS = ["settimana","dispensa","spesa"];
 function place(drag) {
   const t = document.getElementById("rail");
   t.style.transition = drag === undefined ? "transform .3s ease" : "none";
-  t.style.transform = "translateX(calc(" + (-TABS.indexOf(ui.tab) * 100 / 3) + "% + " + (drag || 0) + "px))";
+  t.style.transform = "translateX(calc(" + (-TABS.indexOf(ui.tab) * 100 / 3) + "% - " + (TABS.indexOf(ui.tab) * 8) + "px + " + (drag || 0) + "px))";
 }
 (function () {
   const pg = document.getElementById("pager"); let x0 = 0, y0 = 0, dx = 0, mode = null;
