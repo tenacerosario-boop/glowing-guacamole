@@ -1,0 +1,1114 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Doppia Porzione</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: una colonna da telefono. Barra fissa con tre schede, sotto la scheda attiva. Settimana = striscia dei giorni + card di cucina + pasti a righe. */
+:root {
+  --bg: #F2F4F1;
+  --surface: #FFFFFF;
+  --ink: #16231F;
+  --ink-2: #4B5B55;
+  --line: #D9DFDA;
+  --accent: #2B4FD8;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E3E9FC;
+  --ok: #1E7A4C;
+  --ok-soft: #DDF0E5;
+  --warn: #8F5208;
+  --warn-soft: #F8E8CE;
+  --bad: #B3321F;
+  --bad-soft: #F7DDD8;
+  --plate: #EDEFEA;
+  --plate-rim: #CBD2CC;
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101714;
+    --surface: #18221E;
+    --ink: #E8EFEA;
+    --ink-2: #9AAAA3;
+    --line: #2A3832;
+    --accent: #8CA3FF;
+    --accent-ink: #0C1330;
+    --accent-soft: #1E2850;
+    --ok: #6CCB97;
+    --ok-soft: #173326;
+    --warn: #E6AE5C;
+    --warn-soft: #3A2B12;
+    --bad: #F29080;
+    --bad-soft: #3E1D17;
+    --plate: #26332D;
+    --plate-rim: #3A4A42;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101714;
+  --surface: #18221E;
+  --ink: #E8EFEA;
+  --ink-2: #9AAAA3;
+  --line: #2A3832;
+  --accent: #8CA3FF;
+  --accent-ink: #0C1330;
+  --accent-soft: #1E2850;
+  --ok: #6CCB97;
+  --ok-soft: #173326;
+  --warn: #E6AE5C;
+  --warn-soft: #3A2B12;
+  --bad: #F29080;
+  --bad-soft: #3E1D17;
+  --plate: #26332D;
+  --plate-rim: #3A4A42;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 40px;
+  -webkit-text-size-adjust: 100%;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+}
+.wrap { max-width: 720px; margin: 0 auto; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, summary:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; }
+
+/* intestazione e schede */
+.top { padding-top: 18px; }
+.top h1 { font-size: 30px; line-height: 1.05; font-weight: 700; }
+.top .sub { color: var(--ink-2); margin-top: 4px; }
+.bar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  margin-top: 14px;
+  padding-block: 8px;
+}
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.tab {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.tab[aria-current="page"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.badge {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+main { padding-top: 16px; display: flex; flex-direction: column; gap: 18px; }
+
+/* striscia dei giorni */
+.days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.day {
+  min-height: 58px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  font-weight: 600;
+  padding: 4px 0;
+}
+.day small { font-family: var(--f-mono); font-size: 10px; font-weight: 400; color: var(--ink-2); }
+.day i { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--line); display: block; }
+.day i.cook { background: var(--accent); border-color: var(--accent); }
+.day.today { outline: 2px solid var(--accent); outline-offset: 1px; }
+.day[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.day[aria-pressed="true"] small { color: var(--accent-ink); opacity: .8; }
+.day[aria-pressed="true"] i { border-color: var(--accent-ink); }
+.day[aria-pressed="true"] i.cook { background: var(--accent-ink); }
+
+.dayhead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.dayhead h2 { font-size: 26px; font-weight: 700; }
+.pill {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 2px 9px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.pill.ink { background: var(--ink); color: var(--bg); }
+.label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* card di cucina */
+.cook {
+  background: var(--accent-soft);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.cook h3 { font-size: 20px; font-weight: 700; }
+.cook .row1 { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.cook .time { font-family: var(--f-mono); font-size: 12px; color: var(--accent); }
+.made { display: flex; flex-direction: column; gap: 8px; }
+.madeitem { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: center; }
+.madeitem b { font-weight: 600; }
+.madeitem span { color: var(--ink-2); display: block; font-size: 13px; }
+ol.steps { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
+ol.steps li { counter-increment: s; padding-left: 30px; position: relative; }
+ol.steps li::before {
+  content: counter(s);
+  position: absolute; left: 0; top: 1px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ink); color: var(--bg);
+  font-family: var(--f-mono); font-size: 11px;
+  display: grid; place-items: center;
+}
+.ings { display: flex; flex-direction: column; background: var(--surface); border-radius: 10px; }
+.ing { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center; padding: 8px 12px; border-top: 1px solid var(--line); }
+.ing:first-child { border-top: 0; }
+.q { font-family: var(--f-mono); font-size: 13px; }
+.chip { font-family: var(--f-mono); font-size: 11px; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.bad { background: var(--bad-soft); color: var(--bad); }
+.btn {
+  min-height: 44px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
+  font-weight: 600;
+}
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.small { min-height: 34px; padding: 0 12px; font-size: 13px; }
+.note { padding: 10px 12px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); font-size: 14px; }
+.note a { color: inherit; font-weight: 600; }
+
+/* pasti */
+.meals { border-top: 1px solid var(--line); }
+details.meal { border-bottom: 1px solid var(--line); }
+details.meal > summary {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) auto 14px;
+  gap: 10px; align-items: center;
+  min-height: 56px; padding: 8px 0;
+  cursor: pointer;
+}
+details.meal > summary::-webkit-details-marker { display: none; }
+details.meal > summary::after { content: "›"; font-size: 20px; color: var(--ink-2); transition: transform .15s; }
+details.meal[open] > summary::after { transform: rotate(90deg); }
+.meal .nm { font-weight: 600; }
+.meal .from { display: block; color: var(--ink-2); font-size: 13px; font-weight: 400; }
+.tag { font-family: var(--f-mono); font-size: 11px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.tag.fresh { color: var(--ok); border-color: var(--ok); }
+.recipe { padding: 4px 0 18px; display: flex; flex-direction: column; gap: 14px; }
+.rhead { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 14px; align-items: center; }
+.rmeta { display: flex; flex-direction: column; gap: 6px; }
+.rmeta .t { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); }
+.recipe ul.list { list-style: none; display: flex; flex-direction: column; }
+.recipe ul.list li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid var(--line); }
+.recipe ul.list li:first-child { border-top: 0; }
+.tip { font-size: 14px; color: var(--ink-2); }
+.photoact { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.photoact label.btn { display: inline-flex; align-items: center; }
+.photoact input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.art { width: var(--s, 52px); height: var(--s, 52px); flex: none; }
+.art svg, .art img { width: 100%; height: 100%; display: block; }
+.art img { object-fit: cover; border-radius: 50%; border: 2px solid var(--plate-rim); }
+
+/* da conservare */
+.store { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.store li { list-style: none; padding: 10px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
+.store b { font-weight: 600; }
+.store span { color: var(--ink-2); font-size: 14px; }
+.nothing { color: var(--ink-2); padding: 4px 0; }
+
+/* dispensa e spesa */
+.sum { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.sum strong { font-family: var(--f-display); font-size: 20px; }
+.bar2 { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bar2 > i { display: block; height: 100%; background: var(--ok); }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.fchip { min-height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 14px; }
+.fchip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.group { display: flex; flex-direction: column; gap: 6px; }
+.group > .gh { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.pitem { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.pitem .nm { font-weight: 600; }
+.pitem .meta { color: var(--ink-2); font-size: 13px; font-family: var(--f-mono); }
+.pitem .track { grid-column: 1 / -1; height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.pitem .track > i { display: block; height: 100%; }
+.ctrl { display: flex; align-items: center; gap: 4px; }
+.ctrl button.step { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); font-size: 18px; line-height: 1; }
+.ctrl input { width: 68px; height: 36px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); text-align: center; font-family: var(--f-mono); font-size: 14px; }
+.ctrl .pack { height: 36px; padding: 0 8px; border-radius: 8px; border: 1px dashed var(--line); background: transparent; font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); }
+.buyrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.buyrow .nm { font-weight: 600; }
+.buyrow .meta { color: var(--ink-2); font-size: 13px; }
+.empty { background: var(--ok-soft); color: var(--ok); border-radius: 12px; padding: 16px; font-weight: 600; }
+.foot { color: var(--ink-2); font-size: 12px; font-family: var(--f-mono); padding-top: 6px; }
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  background: var(--ink); color: var(--bg);
+  padding: 10px 16px; border-radius: 10px; font-size: 14px; z-index: 20;
+  max-width: calc(100vw - 32px);
+}
+@media (max-width: 420px) {
+  details.meal > summary { grid-template-columns: 64px minmax(0, 1fr) 14px; }
+  details.meal > summary .tag { display: none; }
+  .rhead { grid-template-columns: 84px minmax(0, 1fr); }
+  .ctrl .pack { display: none; }
+  .ctrl input { width: 58px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <h1>Doppia Porzione</h1>
+    <p class="sub">Cucini quattro volte, mangi tutta la settimana.</p>
+  </div>
+  <div class="bar"><nav class="tabs" id="tabs" aria-label="Sezioni"></nav></div>
+  <main id="view"></main>
+  <p class="foot" id="foot"></p>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+"use strict";
+
+/* ---------- dati ---------- */
+const KEYS = ["lun","mar","mer","gio","ven","sab","dom"];
+const FULL = {lun:"Lunedì",mar:"Martedì",mer:"Mercoledì",gio:"Giovedì",ven:"Venerdì",sab:"Sabato",dom:"Domenica"};
+const SHORT = {lun:"Lun",mar:"Mar",mer:"Mer",gio:"Gio",ven:"Ven",sab:"Sab",dom:"Dom"};
+const JS_DAY = ["dom","lun","mar","mer","gio","ven","sab"];
+const MEAL_LABEL = {col:"Colazione", pr:"Pranzo", ce:"Cena", sp:"Spuntino"};
+
+function item(id, n, where, u, pack, step, o) {
+  return Object.assign({id:id, n:n, where:where, u:u, pack:pack, step:step, exact:false, base:0}, o || {});
+}
+const ITEMS = [
+  item("zucchine","Zucchine","Mercato","g",1000,100,{exact:true}),
+  item("patate","Patate","Mercato","g",1000,100,{exact:true}),
+  item("broccoli","Broccoli o zucca","Mercato","g",500,100,{exact:true}),
+  item("friarielli","Friarielli (freschi o surgelati)","Mercato","g",500,100,{exact:true}),
+  item("funghi","Funghi champignon","Mercato","g",250,50,{exact:true}),
+  item("carote","Carote","Mercato","g",500,100,{exact:true, base:500}),
+  item("finocchi","Finocchi","Mercato","pz",2,1,{exact:true, base:2}),
+  item("frutta","Frutta di stagione","Mercato","g",1000,250,{exact:true, base:1750}),
+  item("uova","Uova","Mercato","pz",12,1),
+  item("pasta","Pasta (integrale se riesci)","Discount","g",500,50),
+  item("riso","Riso","Discount","g",500,50),
+  item("ceci","Ceci cotti (lattina da 400 g)","Discount","pz",1,1),
+  item("tonno","Tonno in scatola (80 g)","Discount","pz",2,1),
+  item("passata","Passata di pomodoro","Discount","g",700,100),
+  item("piselli","Piselli surgelati","Discount","g",450,50),
+  item("fagiolini","Fagiolini surgelati","Discount","g",450,50),
+  item("gamberetti","Gamberetti surgelati","Discount","g",200,50),
+  item("pollo","Sovracosce di pollo","Discount","g",700,100,{exact:true}),
+  item("salsicce","Salsicce","Discount","g",250,50,{exact:true}),
+  item("pancetta","Pancetta o guanciale","Discount","g",100,20,{exact:true}),
+  item("speck","Speck","Discount","g",80,20,{exact:true}),
+  item("provola","Provola","Discount","g",150,50,{exact:true}),
+  item("sfoglia","Pasta sfoglia (rotolo)","Discount","pz",1,1),
+  item("pesto","Pesto (barattolo)","Discount","g",90,10),
+  item("yogurt","Yogurt bianco","Discount","g",1000,125,{base:750}),
+  item("avena","Fiocchi d'avena","Discount","g",500,40,{base:160}),
+  item("pane","Pane integrale (filone)","Discount","pz",1,1,{base:1}),
+  item("burro","Burro d'arachidi","Discount","g",350,15,{base:15}),
+  item("secca","Frutta secca","Discount","g",100,30,{base:60}),
+  item("olio","Olio extravergine","Scorte","ml",500,10),
+  item("aglio","Aglio","Scorte","spicchi",10,1),
+  item("cipolla","Cipolla","Scorte","g",500,50,{exact:true}),
+  item("parmigiano","Parmigiano grattugiato","Scorte","g",100,10),
+  item("soia","Salsa di soia","Scorte","ml",150,10)
+];
+const IT = {};
+ITEMS.forEach(function (x) { IT[x.id] = x; });
+const WHERE = ["Mercato","Discount","Scorte"];
+
+/* Forme per le illustrazioni dei piatti: [forma, colore, quantità, dimensione] */
+const FOODS = {
+  tonno: {
+    n:"Pasta e tonno", kind:"piatto", yield:2, time:20,
+    uses:"Pranzo di lunedì e martedì",
+    ing:[["pasta",200],["tonno",2],["passata",200],["aglio",1],["olio",30]],
+    steps:[
+      "Lessa 200 g di pasta in acqua salata, secondo il tempo sulla confezione.",
+      "In un'altra pentola scalda 2 cucchiai di olio con l'aglio, aggiungi la passata e cuoci 8-10 minuti.",
+      "Spegni, unisci il tonno sgocciolato e mescola.",
+      "Condisci la pasta. Mangia una metà e metti l'altra in un contenitore quando è tiepida."
+    ],
+    tip:"Una carota grattugiata nel sugo aggiunge fibre senza cambiare il gusto.",
+    art:{items:[["curl","#E3B64F",9,7],["dot","#D9482B",12,2.4],["cube","#C98B6B",6,3]]}
+  },
+  pollo: {
+    n:"Pollo e patate al forno", kind:"piatto", yield:2, time:55,
+    uses:"Cena di lunedì e martedì",
+    ing:[["pollo",700],["patate",600],["broccoli",400],["olio",30]],
+    steps:[
+      "Accendi il forno a 200 °C.",
+      "Taglia 600 g di patate a tocchetti e 400 g di broccoli o zucca a pezzi.",
+      "Metti pollo, patate e verdura in teglia con olio, sale, pepe e rosmarino.",
+      "Cuoci 45-50 minuti, girando tutto a metà cottura.",
+      "Metà nel piatto, l'altra metà in un contenitore in frigo."
+    ],
+    tip:"Se togli la pelle dalle sovracosce prima di mangiare, scendono i grassi saturi.",
+    art:{items:[["bar","#B9732E",4,13],["cube","#E8C15A",9,5],["leaf","#4F8F4A",6,6]]}
+  },
+  riso: {
+    n:"Riso, ceci e zucchine", kind:"piatto", yield:2, time:30,
+    uses:"Pranzo di mercoledì e giovedì",
+    ing:[["riso",180],["ceci",1],["zucchine",300],["cipolla",75],["olio",30]],
+    steps:[
+      "Lessa 180 g di riso per 12-14 minuti e scolalo.",
+      "Soffriggi mezza cipolla con l'olio, aggiungi 300 g di zucchine a dadini e cuoci 8 minuti.",
+      "Unisci i ceci sgocciolati e scalda 3 minuti.",
+      "Mescola tutto con il riso, sale e pepe.",
+      "Metà subito. L'altra metà in frigo entro un'ora dalla cottura."
+    ],
+    tip:"Il riso lasciato a lungo a temperatura ambiente non va bene: raffreddalo in fretta.",
+    art:{items:[["dot","#F4F1E4",44,2.4],["dot","#D8B25E",10,3.6],["cube","#7FB069",8,3.6]]}
+  },
+  salsicce: {
+    n:"Salsicce e friarielli", kind:"piatto", yield:2, time:35,
+    uses:"Cena di mercoledì e giovedì",
+    ing:[["salsicce",250],["friarielli",500],["patate",300],["aglio",2],["olio",15]],
+    steps:[
+      "Accendi il forno a 200 °C e metti 300 g di patate a cubetti per 30 minuti.",
+      "Se i friarielli sono freschi, lessali 4 minuti e scolali. I surgelati vanno direttamente in padella.",
+      "Rosola 250 g di salsicce a pezzi per 10 minuti.",
+      "Aggiungi i friarielli con aglio e olio e cuoci 5 minuti.",
+      "Servi con le patate. Metà in frigo."
+    ],
+    tip:"Togli con un cucchiaio parte del grasso rilasciato dalle salsicce prima di aggiungere la verdura.",
+    art:{items:[["bar","#8C4A2F",4,14],["leaf","#3E7D3A",12,6],["cube","#E8C15A",6,4.4]]}
+  },
+  boscaiola: {
+    n:"Pasta alla boscaiola con piselli", kind:"piatto", yield:2, time:35,
+    uses:"Pranzo di venerdì e sabato",
+    ing:[["pasta",200],["piselli",200],["funghi",200],["pancetta",80],["passata",150],["cipolla",75],["olio",20],["parmigiano",20]],
+    steps:[
+      "Rosola 80 g di pancetta a dadini in padella per 3-4 minuti.",
+      "Aggiungi la cipolla tritata e 200 g di funghi a fette, cuoci 8 minuti.",
+      "Unisci i piselli e la passata e cuoci 10 minuti.",
+      "Lessa 200 g di pasta, scolala e mescolala al sugo con il parmigiano.",
+      "Metà nel piatto, l'altra metà in frigo."
+    ],
+    tip:"Senza panna il sugo viene più leggero. La passata basta.",
+    art:{items:[["curl","#E3B64F",9,7],["dot","#5FA55A",13,2.8],["cube","#E58F8F",5,3.4],["dot","#CDB79E",6,3.2],["dot","#D9482B",6,2.4]]}
+  },
+  torta: {
+    n:"Torta salata con zucchine, uova, provola e speck", kind:"piatto", yield:2, time:60,
+    uses:"Cena di venerdì e sabato",
+    ing:[["sfoglia",1],["zucchine",500],["uova",4],["provola",150],["speck",80],["parmigiano",30],["olio",15]],
+    steps:[
+      "Accendi il forno a 180 °C.",
+      "Salta 500 g di zucchine a rondelle in padella con un filo d'olio per 8 minuti.",
+      "Sbatti 4 uova con il parmigiano e il pepe. Unisci zucchine, provola a cubetti e speck a listarelle.",
+      "Stendi la pasta sfoglia in una teglia e versa il composto.",
+      "Cuoci 30-35 minuti, fino a doratura.",
+      "Taglia in 4 fette: 2 per stasera, 2 in frigo."
+    ],
+    tip:"Lo speck è già salato, quindi non serve altro sale.",
+    art:{base:"#D8A657", R:25, items:[["dot","#7FB069",12,4],["cube","#F2D56B",8,4],["cube","#E58F8F",6,3.2]]}
+  },
+  pesto: {
+    n:"Pasta e pesto con uovo sodo", kind:"piatto", yield:1, time:15,
+    uses:"Pranzo di domenica",
+    ing:[["pasta",100],["pesto",40],["fagiolini",150],["parmigiano",15]],
+    steps:[
+      "Lessa 100 g di pasta. Negli ultimi 4 minuti aggiungi 150 g di fagiolini.",
+      "Scola tenendo da parte un mestolo di acqua di cottura.",
+      "Condisci con 40 g di pesto allungato con l'acqua e con il parmigiano.",
+      "Aggiungi l'uovo sodo a spicchi."
+    ],
+    tip:"Con l'uovo e i fagiolini il piatto ha proteine e fibre, che il pesto da solo non dà.",
+    art:{items:[["curl","#9DB84A",9,7],["bar","#4F8F4A",7,8],["dot","#F6F2E8",4,3.6]]}
+  },
+  cantonese: {
+    n:"Riso alla cantonese con gamberetti", kind:"piatto", yield:1, time:20,
+    uses:"Cena di domenica",
+    ing:[["riso",90],["gamberetti",150],["piselli",50],["zucchine",150],["uova",2],["soia",15],["aglio",1],["olio",15]],
+    steps:[
+      "Lessa 90 g di riso, scolalo e raffreddalo sotto l'acqua.",
+      "In una padella ben calda scalda l'olio con l'aglio. Salta 150 g di gamberetti per 3 minuti, poi aggiungi zucchine a dadini e piselli per 5 minuti.",
+      "Sposta tutto da un lato e strapazza 2 uova nella stessa padella.",
+      "Unisci il riso e un cucchiaio di salsa di soia, salta 2 minuti."
+    ],
+    tip:"La salsa di soia è salata: assaggia prima di aggiungere altro sale.",
+    art:{items:[["dot","#F4F1E4",44,2.4],["bar","#F28B6B",5,9],["dot","#5FA55A",11,2.8],["cube","#F2D56B",7,3.2]]}
+  },
+  uova4: {
+    n:"Uova sode (4)", kind:"prep", yield:1, time:12,
+    uses:"Colazioni di martedì e giovedì",
+    ing:[["uova",4]],
+    steps:["Metti 4 uova in acqua fredda, contale 10 minuti dal bollore, raffreddale. Conservale col guscio."],
+    tip:"", art:{items:[["dot","#F6F2E8",4,10]]}
+  },
+  uova1: {
+    n:"Uovo sodo (1)", kind:"prep", yield:1, time:12,
+    uses:"Pranzo di domenica",
+    ing:[["uova",1]],
+    steps:["Fai bollire 1 uovo per 10 minuti, raffreddalo e conservalo col guscio."],
+    tip:"", art:{items:[["dot","#F6F2E8",1,10]]}
+  },
+  yo: {
+    n:"Yogurt, avena e frutta", kind:"colazione", time:3,
+    ingText:["125 g di yogurt bianco","40 g di fiocchi d'avena","1 frutto a pezzi"],
+    steps:["Versa lo yogurt in una ciotola, aggiungi l'avena e la frutta."],
+    tip:"", art:{items:[["dot","#E0BE82",16,2.4],["cube","#D9482B",4,3.6],["cube","#8DB255",3,3.6]], bowl:true}
+  },
+  pane_uova: {
+    n:"Pane integrale e uova sode", kind:"colazione", time:3,
+    ingText:["2 fette di pane integrale","2 uova sode"],
+    steps:["Taglia le uova sode a fette e mettile sul pane."],
+    tip:"Le uova sode sono quelle preparate lunedì.", art:{items:[["cube","#D8A657",2,12],["dot","#F6F2E8",2,8]]}
+  },
+  pane_burro: {
+    n:"Pane integrale e burro d'arachidi", kind:"colazione", time:2,
+    ingText:["2 fette di pane integrale","1 cucchiaio di burro d'arachidi"],
+    steps:["Spalma il burro d'arachidi sul pane."],
+    tip:"", art:{items:[["cube","#D8A657",2,12],["dot","#A9703B",3,5]]}
+  },
+  s_frutta_carote: {
+    n:"Frutta e carote", kind:"spuntino", time:2,
+    ingText:["1 frutto di stagione","1 carota a bastoncini"], steps:[], tip:"Compensa le poche verdure di pasta e tonno.",
+    art:{items:[["bar","#E5802B",6,10],["dot","#D9482B",3,6]]}
+  },
+  s_yogurt_frutta: {
+    n:"Yogurt e frutta", kind:"spuntino", time:2,
+    ingText:["125 g di yogurt bianco","1 frutto di stagione"], steps:[], tip:"Dà le proteine che mancano in una giornata di pasta.",
+    art:{items:[["dot","#E0BE82",8,2],["cube","#D9482B",4,3.6]], bowl:true}
+  },
+  s_pane_frutta: {
+    n:"Pane integrale e frutta", kind:"spuntino", time:2,
+    ingText:["1 fetta di pane integrale","1 frutto di stagione"], steps:[], tip:"Aggiunge carboidrati complessi a giornate con poco pane.",
+    art:{items:[["cube","#D8A657",1,13],["dot","#8DB255",3,6]]}
+  },
+  s_frutta_finocchi: {
+    n:"Frutta e finocchi", kind:"spuntino", time:2,
+    ingText:["1 frutto di stagione","mezzo finocchio a spicchi"], steps:[], tip:"Il finocchio crudo è una verdura da zero cottura.",
+    art:{items:[["leaf","#E4EBC4",6,8],["dot","#D9482B",3,6]]}
+  },
+  s_secca_carote: {
+    n:"Frutta secca e carote", kind:"spuntino", time:2,
+    ingText:["30 g di frutta secca (una manciata)","1 carota a bastoncini"], steps:[], tip:"Calorica: aiuta a non scendere sotto le calorie che ti servono.",
+    art:{items:[["bar","#E5802B",5,10],["dot","#B88A4A",8,3]]}
+  }
+};
+
+/* Giorni: cosa si cucina, in che ordine, cosa si mangia e cosa si conserva */
+const DAYS = [
+  { k:"lun", cook:["tonno","pollo","uova4"], time:75,
+    order:[
+      "A metà mattina accendi il forno a 200 °C e prepara pollo, patate e broccoli in teglia (10 minuti).",
+      "Mentre cuoce (45-50 minuti) metti a bollire le 4 uova, poi prepara sugo e pasta e tonno.",
+      "Pranzo con la pasta appena fatta. Metti la seconda porzione in un contenitore.",
+      "Cena con metà della teglia. L'altra metà va in un contenitore."
+    ],
+    meals:{ col:{f:"yo"}, pr:{f:"tonno"}, ce:{f:"pollo"}, sp:{f:"s_frutta_carote"} },
+    store:[
+      {t:"Pasta e tonno, 1 porzione", how:"Contenitore chiuso in frigo", until:"Pranzo di martedì"},
+      {t:"Pollo e patate, 1 porzione", how:"Contenitore chiuso in frigo", until:"Cena di martedì"},
+      {t:"4 uova sode", how:"Col guscio, in frigo", until:"Colazioni di martedì e giovedì"}
+    ] },
+  { k:"mar", cook:[], time:0, order:[],
+    meals:{ col:{f:"pane_uova"}, pr:{f:"tonno", from:"lun"}, ce:{f:"pollo", from:"lun"}, sp:{f:"s_yogurt_frutta"} },
+    store:[] },
+  { k:"mer", cook:["riso","salsicce"], time:70,
+    order:[
+      "Accendi il forno a 200 °C e metti dentro le patate a cubetti (30 minuti).",
+      "Intanto lessa il riso e prepara zucchine e ceci. Il riso con ceci e zucchine è il tuo pranzo.",
+      "Metti subito la seconda porzione di riso in un contenitore: va in frigo entro un'ora.",
+      "Rosola le salsicce e salta i friarielli. Metà per cena, l'altra metà in frigo."
+    ],
+    meals:{ col:{f:"yo"}, pr:{f:"riso"}, ce:{f:"salsicce"}, sp:{f:"s_pane_frutta"} },
+    store:[
+      {t:"Riso, ceci e zucchine, 1 porzione", how:"Raffreddalo in fretta, frigo entro un'ora", until:"Pranzo di giovedì"},
+      {t:"Salsicce e friarielli, 1 porzione", how:"Contenitore chiuso in frigo", until:"Cena di giovedì"}
+    ] },
+  { k:"gio", cook:[], time:0, order:[],
+    meals:{ col:{f:"pane_uova"}, pr:{f:"riso", from:"mer"}, ce:{f:"salsicce", from:"mer"}, sp:{f:"s_frutta_finocchi"} },
+    store:[] },
+  { k:"ven", cook:["boscaiola","torta","uova1"], time:80,
+    order:[
+      "Accendi il forno a 180 °C e prepara la torta salata (25 minuti di lavoro, poi 30-35 di forno).",
+      "Mentre la torta cuoce, prepara la boscaiola: mezza porzione per pranzo.",
+      "Metti da parte la seconda porzione di boscaiola. Fai bollire 1 uovo per il pesto di domenica.",
+      "A fine cottura taglia la torta in 4 fette: 2 per stasera, 2 in frigo."
+    ],
+    meals:{ col:{f:"yo"}, pr:{f:"boscaiola"}, ce:{f:"torta"}, sp:{f:"s_pane_frutta"} },
+    store:[
+      {t:"Boscaiola con piselli, 1 porzione", how:"Contenitore chiuso in frigo", until:"Pranzo di sabato"},
+      {t:"Torta salata, 2 fette", how:"In un contenitore, in frigo", until:"Cena di sabato"},
+      {t:"1 uovo sodo", how:"Col guscio, in frigo", until:"Pranzo di domenica"}
+    ] },
+  { k:"sab", cook:[], time:0, order:[],
+    meals:{ col:{f:"pane_burro"}, pr:{f:"boscaiola", from:"ven"}, ce:{f:"torta", from:"ven"}, sp:{f:"s_yogurt_frutta"} },
+    store:[],
+    extra:{ t:"Giorno della spesa", b:"Vai al mercato la mattina: Porta Palazzo è chiuso la domenica. Poi passa al discount per il resto.", cta:"Apri la spesa", tab:"spesa" } },
+  { k:"dom", cook:["pesto","cantonese"], time:35,
+    order:[
+      "A pranzo: lessa pasta e fagiolini, condisci con il pesto e aggiungi l'uovo sodo (15 minuti).",
+      "A cena: riso alla cantonese con gamberetti (20 minuti).",
+      "Controlla la dispensa per la settimana che comincia domani."
+    ],
+    meals:{ col:{f:"yo"}, pr:{f:"pesto"}, ce:{f:"cantonese"}, sp:{f:"s_secca_carote"} },
+    store:[] }
+];
+
+/* fabbisogno settimanale: ingredienti delle cotture + voci senza ricetta */
+const NEED = {};
+ITEMS.forEach(function (x) { NEED[x.id] = x.base; });
+DAYS.forEach(function (d) {
+  d.cook.forEach(function (fid) {
+    FOODS[fid].ing.forEach(function (p) { NEED[p[0]] = (NEED[p[0]] || 0) + p[1]; });
+  });
+});
+
+/* ---------- utilità ---------- */
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function num(n) { return String(Math.round(n * 100) / 100).replace(".", ","); }
+function fmt(q, u) {
+  if (u === "g" && q >= 1000) return num(q / 1000) + " kg";
+  if (u === "ml" && q >= 1000) return num(q / 1000) + " l";
+  return num(q) + " " + u;
+}
+function mondayISO() {
+  const n = new Date();
+  const x = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+  return x.getFullYear() + "-" + String(x.getMonth() + 1).padStart(2, "0") + "-" + String(x.getDate()).padStart(2, "0");
+}
+const WEEK = mondayISO();
+function todayKey() { return JS_DAY[new Date().getDay()]; }
+
+/* ---------- stato e salvataggio ---------- */
+const LS_KEY = "doppia-porzione-v1";
+let state = { pantry:{}, cooked:{}, photos:{} };
+let assetsNS = null;
+
+function normalize(d) {
+  const s = { pantry:{}, cooked:{}, photos:{} };
+  if (d && typeof d === "object") {
+    ["pantry","cooked","photos"].forEach(function (sec) {
+      if (d[sec] && typeof d[sec] === "object") {
+        Object.keys(d[sec]).forEach(function (k) { s[sec][k] = d[sec][k]; });
+      }
+    });
+  }
+  return s;
+}
+function loadLocal() {
+  try { const raw = localStorage.getItem(LS_KEY); if (raw) return normalize(JSON.parse(raw)); } catch (e) {}
+  return null;
+}
+function saveLocal() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); return true; } catch (e) { return false; }
+}
+
+const Persist = {
+  mode: "pending",   // pending | db | local | memory
+  ref: null, exists: false, patch: null, busy: false, timer: null, error: false,
+  status: function () {
+    if (this.mode === "db") return this.error ? "Non riesco a salvare, riprovo" : "Salvato nel tuo account, anche su altri dispositivi";
+    if (this.mode === "local") return "Salvato solo su questo dispositivo";
+    if (this.mode === "memory") return "Non posso salvare in questa finestra: i dati restano finché non chiudi";
+    return "";
+  },
+  queue: function (patch) {
+    if (!this.patch) this.patch = {};
+    Object.keys(patch).forEach(function (sec) {
+      if (!Persist.patch[sec]) Persist.patch[sec] = {};
+      Object.assign(Persist.patch[sec], patch[sec]);
+    });
+    if (this.mode === "db") {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(function () { Persist.flush(); }, 500);
+    } else {
+      this.patch = null;
+    }
+  },
+  flush: async function () {
+    if (this.busy || !this.patch || !this.ref) return;
+    this.busy = true;
+    const p = this.patch;
+    this.patch = null;
+    try {
+      if (this.exists) {
+        try { await this.ref.update(p); }
+        catch (e) { if (e && e.code === "invalid_argument") { await this.ref.set(JSON.parse(JSON.stringify(state))); } else { throw e; } }
+      } else {
+        await this.ref.set(JSON.parse(JSON.stringify(state)));
+        this.exists = true;
+      }
+      this.error = false;
+    } catch (e) {
+      this.error = true;
+      const q = this.patch || {};
+      Object.keys(p).forEach(function (sec) { q[sec] = Object.assign({}, p[sec], q[sec] || {}); });
+      this.patch = q;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(function () { Persist.flush(); }, 5000);
+    }
+    this.busy = false;
+    renderFoot();
+    if (this.patch && !this.error) this.flush();
+  }
+};
+
+function commit(patch) {
+  Object.keys(patch).forEach(function (sec) {
+    Object.keys(patch[sec]).forEach(function (k) { state[sec][k] = patch[sec][k]; });
+  });
+  const ok = saveLocal();
+  if (Persist.mode === "pending" || Persist.mode === "local" || Persist.mode === "memory") {
+    Persist.mode = ok ? "local" : "memory";
+  }
+  Persist.queue(patch);
+  render();
+}
+
+/* ---------- logica ---------- */
+function have(id) { return Number(state.pantry[id]) || 0; }
+function missing(id) { return Math.max(0, Math.round((NEED[id] - have(id)) * 100) / 100); }
+function buyQty(it) {
+  const m = missing(it.id);
+  if (m <= 0) return 0;
+  return it.exact ? m : Math.round(Math.ceil(m / it.pack - 1e-9) * it.pack * 100) / 100;
+}
+function cookedInfo(k) {
+  const raw = state.cooked[k];
+  if (!raw) return null;
+  try { const c = JSON.parse(raw); return c && c.w === WEEK ? c : null; } catch (e) { return null; }
+}
+function sessionIngredients(day) {
+  const agg = {};
+  day.cook.forEach(function (fid) {
+    FOODS[fid].ing.forEach(function (p) { agg[p[0]] = (agg[p[0]] || 0) + p[1]; });
+  });
+  return agg;
+}
+function markCooked(k) {
+  const day = DAYS.find(function (d) { return d.k === k; });
+  const agg = sessionIngredients(day);
+  const used = {}, pantry = {};
+  Object.keys(agg).forEach(function (id) {
+    const take = Math.min(have(id), agg[id]);
+    used[id] = take;
+    pantry[id] = Math.round((have(id) - take) * 100) / 100;
+  });
+  const cooked = {}; cooked[k] = JSON.stringify({ w: WEEK, d: used });
+  commit({ pantry: pantry, cooked: cooked });
+  toast("Dispensa aggiornata");
+}
+function undoCooked(k) {
+  const c = cookedInfo(k);
+  const pantry = {};
+  if (c) Object.keys(c.d).forEach(function (id) { pantry[id] = Math.round((have(id) + c.d[id]) * 100) / 100; });
+  const cooked = {}; cooked[k] = null;
+  commit({ pantry: pantry, cooked: cooked });
+  toast("Ingredienti rimessi in dispensa");
+}
+function setHave(id, value) {
+  const v = Math.max(0, Math.round(Number(value) * 100) / 100);
+  if (!isFinite(v)) return;
+  const p = {}; p[id] = v;
+  commit({ pantry: p });
+}
+function missingCount() { return ITEMS.filter(function (x) { return missing(x.id) > 0; }).length; }
+
+/* ---------- illustrazioni ---------- */
+function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function plateSVG(id) {
+  const f = FOODS[id], r = rng(hash(id)), art = f.art;
+  let o = '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(f.n) + '">';
+  o += '<circle cx="60" cy="60" r="57" fill="var(--plate)" stroke="var(--plate-rim)" stroke-width="2"/>';
+  o += '<circle cx="60" cy="60" r="46" fill="none" stroke="var(--plate-rim)" stroke-width="1" opacity=".6"/>';
+  if (art.bowl) o += '<circle cx="60" cy="60" r="38" fill="#F6F2E8" opacity=".9"/>';
+  if (art.base) o += '<rect x="32" y="32" width="56" height="56" rx="9" fill="' + art.base + '"/>';
+  const R = art.R || (art.bowl ? 30 : 36);
+  art.items.forEach(function (it) {
+    const shape = it[0], c = it[1], n = it[2], s = it[3];
+    for (let i = 0; i < n; i++) {
+      const ang = r() * 6.2832, d = Math.sqrt(r()) * R;
+      const x = (60 + Math.cos(ang) * d).toFixed(1), y = (60 + Math.sin(ang) * d).toFixed(1);
+      const rot = Math.round(r() * 180);
+      const tr = ' transform="rotate(' + rot + ' ' + x + ' ' + y + ')"';
+      if (shape === "dot") o += '<circle cx="' + x + '" cy="' + y + '" r="' + s + '" fill="' + c + '"/>';
+      else if (shape === "cube") o += '<rect x="' + (x - s) + '" y="' + (y - s) + '" width="' + (s * 2) + '" height="' + (s * 2) + '" rx="1.5" fill="' + c + '"' + tr + '/>';
+      else if (shape === "bar") o += '<rect x="' + (x - s / 2) + '" y="' + (y - s / 5) + '" width="' + s + '" height="' + (s * 0.4) + '" rx="' + (s * 0.2) + '" fill="' + c + '"' + tr + '/>';
+      else if (shape === "leaf") o += '<ellipse cx="' + x + '" cy="' + y + '" rx="' + s + '" ry="' + (s / 2) + '" fill="' + c + '"' + tr + '/>';
+      else if (shape === "curl") o += '<path d="M' + (x - s) + ' ' + y + ' q' + (s / 2) + ' ' + (-s * 0.9) + ' ' + s + ' 0 t' + s + ' 0" fill="none" stroke="' + c + '" stroke-width="2.4" stroke-linecap="round"' + tr + '/>';
+    }
+  });
+  return o + "</svg>";
+}
+function art(id, size) {
+  const pid = state.photos[id];
+  const inner = pid
+    ? '<img src="/_blob/' + esc(pid) + '" alt="' + esc(FOODS[id].n) + '" loading="lazy">'
+    : plateSVG(id);
+  return '<div class="art" style="--s:' + size + 'px">' + inner + "</div>";
+}
+
+/* ---------- viste ---------- */
+const ui = { tab: "settimana", day: todayKey(), filter: "tutti", open: {} };
+
+function ingredientRows(agg) {
+  return Object.keys(agg).map(function (id) {
+    const it = IT[id], q = agg[id], h = have(id);
+    const chip = h >= q ? '<span class="chip ok">ce l\'hai</span>' : '<span class="chip ' + (h > 0 ? "warn" : "bad") + '">mancano ' + esc(fmt(q - h, it.u)) + "</span>";
+    return '<div class="ing"><span>' + esc(it.n) + '</span><span class="q">' + esc(fmt(q, it.u)) + "</span>" + chip + "</div>";
+  }).join("");
+}
+
+function recipe(fid, ctx) {
+  const f = FOODS[fid];
+  let h = '<div class="recipe"><div class="rhead">' + art(fid, 110) + '<div class="rmeta">';
+  if (f.kind === "piatto") h += '<span class="t">' + (f.yield === 2 ? "Dose doppia: 2 pasti" : "1 pasto") + " · circa " + f.time + " min</span>";
+  else h += '<span class="t">circa ' + f.time + " min</span>";
+  if (f.tip) h += '<p class="tip">' + esc(f.tip) + "</p>";
+  h += "</div></div>";
+  h += '<div><div class="label" style="margin-bottom:4px">' + (f.yield === 2 ? "Ingredienti per tutta la cottura" : "Ingredienti") + '</div><ul class="list">';
+  if (f.ing) {
+    f.ing.forEach(function (p) { h += "<li><span>" + esc(IT[p[0]].n) + '</span><span class="q">' + esc(fmt(p[1], IT[p[0]].u)) + "</span></li>"; });
+  } else {
+    f.ingText.forEach(function (t) { h += "<li><span>" + esc(t) + "</span></li>"; });
+  }
+  h += "</ul></div>";
+  if (f.steps.length) {
+    h += '<div><div class="label" style="margin-bottom:6px">Come si fa</div><ol class="steps">';
+    f.steps.forEach(function (s) { h += "<li>" + esc(s) + "</li>"; });
+    h += "</ol></div>";
+  }
+  if (f.kind === "piatto" && assetsNS && Persist.mode === "db") {
+    h += '<div class="photoact"><label class="btn ghost small" for="ph-' + ctx + '">' + (state.photos[fid] ? "Cambia la tua foto" : "Aggiungi la tua foto") + '</label><input type="file" accept="image/*" id="ph-' + ctx + '" data-a="photo" data-f="' + fid + '">';
+    if (state.photos[fid]) h += '<button class="btn ghost small" data-a="unphoto" data-f="' + fid + '">Usa l\'illustrazione</button>';
+    h += "</div>";
+  }
+  return h + "</div>";
+}
+
+function viewDay(k) {
+  const d = DAYS.find(function (x) { return x.k === k; });
+  const isToday = k === todayKey();
+  let h = '<div class="dayhead"><h2>' + FULL[k] + "</h2>";
+  if (isToday) h += '<span class="pill">Oggi</span>';
+  h += d.cook.length ? '<span class="pill ink">Giorno di cucina</span>' : '<span class="pill ink">Niente fornelli</span>';
+  h += "</div>";
+
+  if (d.cook.length) {
+    const agg = sessionIngredients(d);
+    const done = cookedInfo(k);
+    const miss = Object.keys(agg).filter(function (id) { return have(id) < agg[id]; }).length;
+    h += '<section class="cook" aria-label="Cucina"><div class="row1"><h3>' + (isToday ? "Oggi cucini" : "Qui cucini") + '</h3><span class="time">circa ' + d.time + " min</span></div>";
+    h += '<div class="made">';
+    d.cook.forEach(function (fid) {
+      const f = FOODS[fid];
+      h += '<div class="madeitem">' + art(fid, 52) + "<div><b>" + esc(f.n) + (f.yield === 2 ? " ×2" : "") + "</b><span>" + esc(f.uses) + "</span></div></div>";
+    });
+    h += "</div>";
+    h += '<div><div class="label" style="margin-bottom:6px">Ordine di lavoro</div><ol class="steps">';
+    d.order.forEach(function (s) { h += "<li>" + esc(s) + "</li>"; });
+    h += "</ol></div>";
+    h += '<div><div class="label" style="margin-bottom:6px">Ingredienti</div><div class="ings">' + ingredientRows(agg) + "</div></div>";
+    if (!done && miss > 0) h += '<div class="note">Per questa cottura mancano ' + miss + ' ingredienti. <a href="#spesa" data-a="tab" data-t="spesa">Apri la spesa</a></div>';
+    h += done
+      ? '<div class="row1"><span class="chip ok">Cucinato: dispensa aggiornata</span><button class="btn ghost small" data-a="undo" data-k="' + k + '">Annulla</button></div>'
+      : '<button class="btn" data-a="cooked" data-k="' + k + '">Ho cucinato: togli dalla dispensa</button>';
+    h += "</section>";
+  } else {
+    h += '<p class="nothing">Oggi non cucini: scaldi quello che hai conservato.</p>';
+  }
+
+  if (d.extra) {
+    h += '<section class="note"><b>' + esc(d.extra.t) + ".</b> " + esc(d.extra.b) + ' <a href="#' + d.extra.tab + '" data-a="tab" data-t="' + d.extra.tab + '">' + esc(d.extra.cta) + "</a></section>";
+  }
+
+  h += '<section><div class="label" style="margin-bottom:6px">Pasti</div><div class="meals">';
+  ["col","pr","ce","sp"].forEach(function (m) {
+    const meal = d.meals[m], f = FOODS[meal.f], key = k + "-" + m;
+    const isOpen = ui.open[key] ? " open" : "";
+    const tag = meal.from ? '<span class="tag">dal frigo</span>' : (f.kind === "piatto" ? '<span class="tag fresh">appena fatto</span>' : "");
+    h += '<details class="meal" data-key="' + key + '"' + isOpen + '><summary><span class="label">' + MEAL_LABEL[m] + '</span><span class="nm">' + esc(f.n) +
+      (meal.from ? '<span class="from">Cucinato ' + FULL[meal.from].toLowerCase() + ": scalda 2 minuti</span>" : "") + "</span>" + tag + "</summary>" +
+      recipe(meal.f, key) + "</details>";
+  });
+  h += "</div></section>";
+
+  h += '<section><div class="label" style="margin-bottom:6px">Da conservare</div>';
+  if (d.store.length) {
+    h += '<ul class="store">';
+    d.store.forEach(function (s) { h += "<li><b>" + esc(s.t) + "</b><span>" + esc(s.how) + " · " + esc(s.until) + "</span></li>"; });
+    h += "</ul>";
+  } else {
+    h += '<p class="nothing">' + (d.cook.length ? "Si mangia tutto oggi, niente da mettere via." : "Niente da conservare oggi.") + "</p>";
+  }
+  h += "</section>";
+  return h;
+}
+
+function viewWeek() {
+  let h = '<div class="days" role="group" aria-label="Giorni">';
+  const t = todayKey();
+  KEYS.forEach(function (k) {
+    const cook = DAYS.find(function (x) { return x.k === k; }).cook.length > 0;
+    h += '<button class="day' + (k === t ? " today" : "") + '" data-a="day" data-k="' + k + '" aria-pressed="' + (ui.day === k) + '"><span>' + SHORT[k] + "</span><i" + (cook ? ' class="cook"' : "") + '></i></button>';
+  });
+  h += '</div><p class="label">Il pallino pieno è un giorno di cucina</p>';
+  return h + viewDay(ui.day);
+}
+
+function pitem(it) {
+  const h = have(it.id), n = NEED[it.id];
+  const ratio = Math.min(1, n > 0 ? h / n : 1);
+  const color = h >= n ? "var(--ok)" : (h > 0 ? "var(--warn)" : "var(--bad)");
+  const status = h >= n ? "ok" : (h > 0 ? "poco" : "manca");
+  return '<div class="pitem"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">' + esc(fmt(h, it.u)) + " di " + esc(fmt(n, it.u)) + " a settimana · " + status + "</div></div>" +
+    '<div class="ctrl"><button class="step" data-a="dec" data-i="' + it.id + '" aria-label="Togli da ' + esc(it.n) + '">−</button>' +
+    '<input type="number" inputmode="decimal" min="0" step="any" value="' + h + '" data-a="set" data-i="' + it.id + '" aria-label="Quantità di ' + esc(it.n) + ' in ' + it.u + '">' +
+    '<button class="step" data-a="inc" data-i="' + it.id + '" aria-label="Aggiungi a ' + esc(it.n) + '">+</button>' +
+    '<button class="pack" data-a="pack" data-i="' + it.id + '" aria-label="Aggiungi una confezione di ' + esc(it.n) + '">+' + esc(fmt(it.pack, it.u)) + "</button></div>" +
+    '<div class="track"><i style="width:' + Math.round(ratio * 100) + "%;background:" + color + '"></i></div></div>';
+}
+
+function viewPantry() {
+  const total = ITEMS.length;
+  const ok = ITEMS.filter(function (x) { return missing(x.id) === 0; }).length;
+  let h = '<section class="sum"><strong>Hai ' + ok + " ingredienti su " + total + ' per la settimana</strong><div class="bar2"><i style="width:' + Math.round(ok / total * 100) + '%"></i></div>';
+  if (ok === 0 && Object.keys(state.pantry).length === 0) h += '<p class="tip">Parti da zero: segna quello che hai già in casa con + e −. Quando fai la spesa, tocca "Comprato" nella scheda Spesa.</p>';
+  h += '<div class="filters" role="group" aria-label="Filtro">';
+  [["tutti","Tutti"],["mancano","Mancano"],["ok","Ce li hai"]].forEach(function (f) {
+    h += '<button class="fchip" data-a="filter" data-v="' + f[0] + '" aria-pressed="' + (ui.filter === f[0]) + '">' + f[1] + "</button>";
+  });
+  h += "</div></section>";
+  WHERE.forEach(function (w) {
+    const list = ITEMS.filter(function (x) {
+      if (x.where !== w) return false;
+      if (ui.filter === "mancano") return missing(x.id) > 0;
+      if (ui.filter === "ok") return missing(x.id) === 0;
+      return true;
+    });
+    if (!list.length) return;
+    h += '<section class="group"><div class="gh"><h3>' + w + '</h3><span class="label">' + list.length + " voci</span></div>" + list.map(pitem).join("") + "</section>";
+  });
+  return h;
+}
+
+function viewShop() {
+  const miss = ITEMS.filter(function (x) { return missing(x.id) > 0; });
+  if (!miss.length) return '<div class="empty">Hai tutto per la settimana. Niente da comprare.</div>';
+  let h = '<section class="sum"><strong>Da comprare: ' + miss.length + " voci</strong><p class=\"tip\">Al mercato compri a peso, al discount a confezioni. \"Comprato\" aggiunge alla dispensa la quantità indicata.</p><div class=\"row1\" style=\"display:flex;gap:8px;flex-wrap:wrap\"><button class=\"btn small\" data-a=\"copy\">Copia la lista</button></div></section>";
+  WHERE.forEach(function (w) {
+    const list = miss.filter(function (x) { return x.where === w; });
+    if (!list.length) return;
+    h += '<section class="group"><div class="gh"><h3>' + w + '</h3><button class="btn ghost small" data-a="buyall" data-w="' + w + '">Tutto comprato</button></div>';
+    list.forEach(function (it) {
+      const b = buyQty(it), m = missing(it.id);
+      h += '<div class="buyrow"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">Compra ' + esc(fmt(b, it.u)) + (b !== m ? " (ti servono " + esc(fmt(m, it.u)) + ")" : "") + '</div></div><button class="btn ghost small" data-a="buy" data-i="' + it.id + '">Comprato</button></div>';
+    });
+    h += "</section>";
+  });
+  return h;
+}
+
+function render() {
+  const tabs = [["settimana","Settimana"],["dispensa","Dispensa"],["spesa","Spesa"]];
+  const mc = missingCount();
+  document.getElementById("tabs").innerHTML = tabs.map(function (t) {
+    return '<button class="tab" data-a="tab" data-t="' + t[0] + '"' + (ui.tab === t[0] ? ' aria-current="page"' : "") + ">" + t[1] + (t[0] === "spesa" && mc > 0 ? '<span class="badge">' + mc + "</span>" : "") + "</button>";
+  }).join("");
+  const v = document.getElementById("view");
+  v.innerHTML = ui.tab === "dispensa" ? viewPantry() : (ui.tab === "spesa" ? viewShop() : viewWeek());
+  renderFoot();
+}
+function renderFoot() { document.getElementById("foot").textContent = Persist.status(); }
+
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.hidden = true; }, 2400);
+}
+
+/* ---------- navigazione ---------- */
+function applyHash() {
+  const h = (location.hash || "").replace("#", "");
+  if (h === "dispensa" || h === "spesa") ui.tab = h;
+  else if (KEYS.indexOf(h) >= 0) { ui.tab = "settimana"; ui.day = h; }
+  else if (h === "settimana") ui.tab = "settimana";
+}
+function go(tab, day) {
+  ui.tab = tab;
+  if (day) ui.day = day;
+  try { location.hash = tab === "settimana" ? ui.day : tab; } catch (e) {}
+  render();
+}
+window.addEventListener("hashchange", function () { applyHash(); render(); });
+
+/* ---------- azioni ---------- */
+function copyText(text) {
+  const done = function () { toast("Lista copiata"); };
+  const fallback = function () {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { toast("Non riesco a copiare"); }
+    document.body.removeChild(ta);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+  else fallback();
+}
+function shopText() {
+  let out = [];
+  WHERE.forEach(function (w) {
+    const list = ITEMS.filter(function (x) { return x.where === w && missing(x.id) > 0; });
+    if (!list.length) return;
+    out.push(w + ":");
+    list.forEach(function (it) { out.push("- " + it.n + ": " + fmt(buyQty(it), it.u)); });
+    out.push("");
+  });
+  return out.join("\n").trim();
+}
+function buy(it) {
+  const p = {}; p[it.id] = Math.round((have(it.id) + buyQty(it)) * 100) / 100;
+  return p;
+}
+async function shrink(file) {
+  const bmp = await createImageBitmap(file);
+  const sc = Math.min(1, 1000 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * sc); c.height = Math.round(bmp.height * sc);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return await new Promise(function (res, rej) { c.toBlob(function (b) { b ? res(b) : rej(new Error("blob")); }, "image/jpeg", 0.82); });
+}
+async function addPhoto(fid, file) {
+  if (!file || !assetsNS) return;
+  toast("Carico la foto…");
+  try {
+    let blob;
+    try { blob = await shrink(file); }
+    catch (e) { blob = file; }
+    const res = await assetsNS.upload(blob, { type: blob.type === "image/jpeg" ? "image/jpeg" : blob.type });
+    const p = {}; p[fid] = res.id;
+    commit({ photos: p });
+    toast("Foto salvata");
+  } catch (e) {
+    toast("Non riesco a caricare la foto");
+  }
+}
+
+document.addEventListener("toggle", function (e) {
+  const d = e.target;
+  if (d && d.classList && d.classList.contains("meal")) ui.open[d.dataset.key] = d.open;
+}, true);
+
+document.addEventListener("click", function (e) {
+  const t = e.target.closest("[data-a]");
+  if (!t) return;
+  const a = t.dataset.a;
+  if (a === "tab") { e.preventDefault(); go(t.dataset.t); window.scrollTo(0, 0); }
+  else if (a === "day") go("settimana", t.dataset.k);
+  else if (a === "cooked") markCooked(t.dataset.k);
+  else if (a === "undo") undoCooked(t.dataset.k);
+  else if (a === "filter") { ui.filter = t.dataset.v; render(); }
+  else if (a === "inc" || a === "dec") {
+    const it = IT[t.dataset.i];
+    setHave(it.id, have(it.id) + (a === "inc" ? it.step : -it.step));
+  }
+  else if (a === "pack") { const it = IT[t.dataset.i]; setHave(it.id, have(it.id) + it.pack); }
+  else if (a === "buy") { commit({ pantry: buy(IT[t.dataset.i]) }); toast("Aggiunto alla dispensa"); }
+  else if (a === "buyall") {
+    const p = {};
+    ITEMS.filter(function (x) { return x.where === t.dataset.w && missing(x.id) > 0; }).forEach(function (it) { Object.assign(p, buy(it)); });
+    commit({ pantry: p });
+    toast("Aggiunto alla dispensa");
+  }
+  else if (a === "copy") copyText(shopText());
+  else if (a === "unphoto") { const p = {}; p[t.dataset.f] = null; commit({ photos: p }); }
+});
+document.addEventListener("change", function (e) {
+  const t = e.target;
+  if (!t || !t.dataset) return;
+  if (t.dataset.a === "set") setHave(t.dataset.i, t.value === "" ? 0 : t.value);
+  else if (t.dataset.a === "photo") addPhoto(t.dataset.f, t.files && t.files[0]);
+});
+
+/* ---------- avvio ---------- */
+const local = loadLocal();
+if (local) { state = local; Persist.mode = "local"; }
+applyHash();
+render();
+
+(async function connect() {
+  if (!(window.claude && window.claude.use)) { if (Persist.mode === "pending") { Persist.mode = saveLocal() ? "local" : "memory"; renderFoot(); } return; }
+  let db = null;
+  try { db = await window.claude.use("db"); } catch (e) { db = null; }
+  if (!db) { if (Persist.mode === "pending") { Persist.mode = saveLocal() ? "local" : "memory"; } renderFoot(); return; }
+  try { assetsNS = await window.claude.use("assets"); } catch (e) { assetsNS = null; }
+  Persist.ref = db.doc("app/state");
+  Persist.mode = "db";
+  Persist.ref.onSnapshot(function (snap) {
+    Persist.exists = snap.exists;
+    if (Persist.patch || Persist.busy || snap.metadata.hasPendingWrites) { renderFoot(); return; }
+    if (snap.exists) { state = normalize(snap.data()); saveLocal(); render(); }
+    else if (local && (Object.keys(local.pantry).length || Object.keys(local.cooked).length)) {
+      Persist.queue({ pantry: local.pantry, cooked: local.cooked, photos: local.photos });
+      renderFoot();
+    } else { render(); }
+  }, function () { Persist.mode = local ? "local" : "memory"; renderFoot(); });
+})();
+})();
+</script>
+
+</body></html>
