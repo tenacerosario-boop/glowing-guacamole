@@ -382,12 +382,29 @@ textarea.mono{font-family:var(--f-mono);font-size:12px!important;word-break:brea
 details.rec{margin-top:6px}
 .ml-prep{color:var(--ink-2)}
 .sh p{margin:0}
+
+/* ---- colori dei titoletti, campi obbligatori, facoltativo ---- */
+:root{--k0:#C4492F;--k1:#2B7A4B;--k2:#2F78B5;--k3:#B7791F;--k4:#8E5BA8;--k5:#0E8A8A;--k6:#C2377A;--k7:#5560D8;--k8:#6F8A1F;--k9:#8A5A2B}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--k0:#F08A6C;--k1:#7BD39E;--k2:#7DB8EA;--k3:#F2C26B;--k4:#C9A0E0;--k5:#6FD3D5;--k6:#F08FBF;--k7:#A5AEFF;--k8:#B9D45F;--k9:#D9A26B}}
+.fld>label{font-weight:700}
+.fld>label.c0{color:var(--k0)}.fld>label.c1{color:var(--k1)}.fld>label.c2{color:var(--k2)}.fld>label.c3{color:var(--k3)}.fld>label.c4{color:var(--k4)}.fld>label.c5{color:var(--k5)}.fld>label.c6{color:var(--k6)}.fld>label.c7{color:var(--k7)}.fld>label.c8{color:var(--k8)}.fld>label.c9{color:var(--k9)}
+.fld>label .opt{font-size:9px;font-weight:400;letter-spacing:.04em;text-transform:none;color:var(--ink-2);margin-left:6px}
+.fld.bad>label{background:var(--bad);color:#fff;padding:2px 8px;border-radius:6px;align-self:flex-start}
+.fld.bad input:not([type=checkbox]),.fld.bad select,.fld.bad textarea,.irow input.bad{border:2px solid var(--bad)!important;background:var(--bad-soft)!important}
+.ferr{color:var(--bad);font-size:13px;font-weight:600}
+.addbtn.kd{border:2px solid var(--k0);color:var(--k0)}
+.addbtn.ki{border:2px solid var(--k1);color:var(--k1)}
+.dl.il{grid-template-columns:minmax(0,1fr) auto}
+details.group.rec{padding:4px 10px;border-top-width:4px;margin-top:-6px}details.group.rec .dn b{font-size:13px}details.group.rec .dn span{font-size:11px}details.group.rec .btn.small{min-height:28px;font-size:12px;padding:0 10px}
+.srow.num{grid-template-columns:26px minmax(0,1fr) 36px}
+.srow.num.solo{grid-template-columns:26px minmax(0,1fr)}
+.sn{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--f-mono);font-size:11px;display:grid;place-items:center;margin-top:10px}
 </style>
 
 <div class="wrap">
   <div class="top">
     <h1>Mangia la pappa</h1>
-    <p class="sub">Cucini quattro volte, mangi tutta la settimana.</p>
+    <p class="sub">Cucini poco, mangi bene tutta la settimana.</p>
   </div>
   <div class="bar"><nav class="tabs" id="tabs" aria-label="Sezioni"></nav></div>
   <div class="pager" id="pager"><div class="rail" id="rail"><section class="pane on" id="p0"><main id="v0"></main><details class="group" id="settings" style="margin-top:72px;padding:4px 8px;font-size:10px"><summary class="label" style="padding:2px 0;font-size:9px">Impostazioni · dati · icona dell'app</summary><div style="display:flex;flex-direction:column;gap:8px;margin:10px 0"><p class="label" style="font-size:11px">Il tuo menu</p><button class="btn ghost small" data-a="share">Condividi il mio menu</button><button class="btn ghost small" data-a="import">Importa un menu</button><button class="btn ghost small" data-a="reset">Ricomincia da zero</button><button class="btn ghost small" data-a="restore">Ripristina il menu di Rosario</button></div><p class="tip">Scegli emoji e colore. Poi da Safari: Condividi → Aggiungi alla schermata Home (togli prima la vecchia icona).</p><div id="emo" class="filters"></div><div id="col" class="filters" style="margin-top:8px"></div><input id="emoin" maxlength="4" placeholder="oppure scrivi un'emoji" style="margin-top:8px;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:var(--surface);color:var(--ink)"></details></section><section class="pane" id="p1"><main id="v1"></main></section><section class="pane" id="p2"><main id="v2"></main></section></div></div>
@@ -789,6 +806,12 @@ function toU(id, q) { return Math.round(q / (IT[id].per || 1) * 1000) / 1000; }
 function runit(it) { return it ? (it.per ? it.ru : it.u) : ""; }
 function recFmt(id, q) { const it = IT[id]; return fmt(q, runit(it)); }
 function storeColor(w) { return STORE_COL0[w] || PALETTE[(CFG.stores.indexOf(w) + 3) % PALETTE.length]; }
+const CAT_COL = {"verdura":["#2E9B4F","#fff"],"frutta":["#E86A9E","#fff"],"pasta e riso":["#F2C21B","#2B2017"],"carne e salumi":["#C8312B","#fff"],"surgelati":["#4FB3E8","#0B2A3D"],"uova e latticini":["#FFFFFF","#000"],"scatolame e sughi":["#F28A1E","#2B1700"],"colazione e forno":["#7A1F3D","#fff"],"condimenti":["#8E5BA8","#fff"],"condimento":["#8E5BA8","#fff"]};
+function catStyle(name) {
+  const c = CAT_COL[String(name).trim().toLowerCase()];
+  if (!c) return "";
+  return "background:" + c[0] + ";color:" + c[1] + (c[0] === "#FFFFFF" ? ";border:1px solid var(--ink-2)" : "");
+}
 function catIdx(c) { return Math.max(0, CFG.cats.indexOf(c)) % PALETTE.length; }
 function byCat(l) { const m = {}; l.forEach(function (x) { (m[x.cat] = m[x.cat] || []).push(x); }); return CFG.cats.filter(function (c) { return m[c]; }).map(function (c) { return [c, m[c]]; }); }
 
@@ -1093,7 +1116,7 @@ function ingredientRows(agg) {
 function recipe(fid, ctx, e) {
   const f = FOODS[fid];
   let h = '<div class="recipe">';
-  if (f.yield === 2) h += '<div><span class="pill">Dose ×2</span></div>';
+  if (f.yield > 1) h += '<div><span class="pill">Dose ×' + f.yield + "</span></div>";
   const hasIng = f.ing && f.ing.some(function (p) { return IT[p[0]]; }), hasTxt = f.ingText && f.ingText.length;
   h += '<div class="rsec"><div class="rh">Ingredienti</div>';
   if (hasIng || hasTxt) {
@@ -1146,7 +1169,7 @@ function viewDay(k) {
       h += '<div class="row1"><h3>' + (isToday ? "Oggi cucini" : "Qui cucini") + "</h3>" + (dm.time > 0 ? '<span class="time">circa ' + dm.time + " min</span>" : "") + '</div><p class="tip">Scegli cosa preparare:</p><div class="made">';
       cook.forEach(function (e) {
         const f = FOODS[e.f], dn = cookedKey(k, e.f);
-        h += '<button class="madeitem btn ghost" data-a="dish" data-f="' + e.f + '">' + art(e.f, 52) + "<div><b>" + esc(f.n) + (f.yield === 2 ? " ×2" : "") + "</b><span>" + esc(usesText(k, e)) + "</span></div>" + (dn ? '<span class="chip ok">fatto</span>' : "<span>›</span>") + "</button>";
+        h += '<button class="madeitem btn ghost" data-a="dish" data-f="' + e.f + '">' + art(e.f, 52) + "<div><b>" + esc(f.n) + (f.yield > 1 ? " ×" + f.yield : "") + "</b><span>" + esc(usesText(k, e)) + "</span></div>" + (dn ? '<span class="chip ok">fatto</span>' : "<span>›</span>") + "</button>";
       });
       h += "</div>";
       if (dm.order && dm.order.length) h += '<details><summary class="label">Ordine di lavoro</summary><ol class="steps" style="margin-top:8px">' + dm.order.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol></details>";
@@ -1175,13 +1198,21 @@ function viewDay(k) {
   });
   h += '</div><button class="addbtn" style="width:100%;margin-top:10px" data-a="eadd" data-k="' + k + '">+ Aggiungi un pasto</button></section>';
 
+  h += '<section><div class="row2"><button class="addbtn kd" data-a="dnew">+ Nuovo piatto</button><button class="addbtn ki" data-a="iadd">+ Nuovo ingrediente</button></div></section>';
   const ids = Object.keys(FOODS).sort(function (a, b) { return FOODS[a].n.localeCompare(FOODS[b].n, "it"); });
-  h += '<details class="group rec" data-key="rec"' + (ui.open.rec ? " open" : "") + '><summary class="label" style="padding:6px 0;cursor:pointer">Ricettario · ' + ids.length + (ids.length === 1 ? " piatto" : " piatti") + '</summary>';
+  h += '<details class="group rec" data-key="rec" style="--c:var(--k0)"' + (ui.open.rec ? " open" : "") + '><summary class="label" style="padding:2px 0;cursor:pointer;color:var(--k0);font-weight:700;font-size:9px">Lista piatti · ' + ids.length + '</summary>';
   ids.forEach(function (id) {
     const f = FOODS[id];
     h += '<div class="dl">' + art(id, 40) + '<div class="dn"><b>' + esc(f.n) + '</b><span>' + esc((KIND_ONE[f.kind] || "").replace(" (non è un pasto)", "")) + '</span></div><button class="btn ghost small" data-a="dedit" data-f="' + id + '">Modifica</button><button class="btn ghost small" data-a="duse" data-f="' + id + '">Usa qui</button></div>';
   });
-  h += '<button class="addbtn" style="width:100%;margin-top:8px" data-a="dnew">+ Nuovo piatto</button></details>';
+  h += '</details>';
+  const its = ITEMS.slice().sort(function (a, b) { return a.n.localeCompare(b.n, "it"); });
+  h += '<details class="group rec" data-key="ing" style="--c:var(--k1)"' + (ui.open.ing ? " open" : "") + '><summary class="label" style="padding:2px 0;cursor:pointer;color:var(--k1);font-weight:700;font-size:9px">Lista ingredienti · ' + its.length + '</summary>';
+  its.forEach(function (it) {
+    h += '<div class="dl il"><div class="dn"><b>' + esc(it.n) + '</b><span>' + esc(it.where + " · " + it.cat + " · " + runit(it).replace("%", "% di confezione")) + '</span></div><button class="btn ghost small" data-a="iedit" data-i="' + it.id + '">Modifica</button></div>';
+  });
+  if (!its.length) h += '<p class="nothing">Nessun ingrediente ancora.</p>';
+  h += '</details>';
   return h;
 }
 
@@ -1235,7 +1266,7 @@ function viewPantry() {
       return true;
     });
     if (!list.length) return;
-    h += '<section class="group" style="--c:' + storeColor(w) + '"><div class="gh"><h3>' + esc(w) + '</h3><span class="label">' + list.length + " voci</span></div>" + byCat(list).map(function (c) { return '<div class="cat" data-c="' + catIdx(c[0]) + '">' + esc(c[0]) + "</div>" + c[1].map(pitem).join(""); }).join("") + "</section>";
+    h += '<section class="group" style="--c:' + storeColor(w) + '"><div class="gh"><h3>' + esc(w) + '</h3><span class="label">' + list.length + " voci</span></div>" + byCat(list).map(function (c) { return '<div class="cat" data-c="' + catIdx(c[0]) + '" style="' + catStyle(c[0]) + '">' + esc(c[0]) + "</div>" + c[1].map(pitem).join(""); }).join("") + "</section>";
   });
   return h;
 }
@@ -1250,7 +1281,7 @@ function viewShop() {
     const list = miss.filter(function (x) { return x.where === w; });
     if (!list.length) return;
     h += '<section class="group" style="--c:' + storeColor(w) + '"><div class="gh"><h3>' + esc(w) + '</h3><button class="btn ghost small" data-a="buyall" data-w="' + esc(w) + '">Tutto comprato</button></div>';
-    byCat(list).forEach(function (c) { h += '<div class="cat" data-c="' + catIdx(c[0]) + '">' + esc(c[0]) + "</div>"; c[1].forEach(function (it) {
+    byCat(list).forEach(function (c) { h += '<div class="cat" data-c="' + catIdx(c[0]) + '" style="' + catStyle(c[0]) + '">' + esc(c[0]) + "</div>"; c[1].forEach(function (it) {
       const b = buyQty(it), m = missing(it.id);
       h += '<div class="buyrow"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">Compra ' + (it.u === "%" ? "1 confezione (ti serve il " + esc(fmt(m, it.u)) + ")" : esc(fmt(b, it.u)) + (b !== m ? " (ti servono " + esc(fmt(m, it.u)) + ")" : "")) + '</div></div><div class="tr"><button class="ibtn" data-a="iedit" data-i="' + it.id + '" aria-label="Modifica ' + esc(it.n) + '">✎</button><button class="btn ghost small" data-a="buy" data-i="' + it.id + '">Comprato</button></div></div>';
     }); });
@@ -1310,23 +1341,49 @@ function drawSheet() {
   const body = host.querySelector(".sbody");
   if (body && drawn && drawn === s) drawn.scroll = body.scrollTop;
   if (!s) { host.hidden = true; host.innerHTML = ""; document.documentElement.classList.remove("lock"); drawn = null; return; }
+  ERR = s.err || {};
   host.innerHTML = SH[s.type].html(s);
   host.hidden = false; document.documentElement.classList.add("lock");
   const nb = host.querySelector(".sbody"); if (nb) nb.scrollTop = s.scroll || 0;
   drawn = s;
   if (SH[s.type].sync) SH[s.type].sync(s);
 }
-function shell(title, body, foot, small) {
-  return '<div class="sov"' + (small ? ' data-a="sclose"' : "") + '></div><div class="sh' + (small ? " small" : "") + '" role="dialog" aria-modal="true"><div class="shead"><h3>' + esc(title) + '</h3><button class="x" data-a="sclose" aria-label="Chiudi">✕</button></div><div class="sbody">' + body + '</div><div class="sfoot">' + foot + "</div></div>";
+function shell(title, body, foot, small, tc) {
+  return '<div class="sov"' + (small ? ' data-a="sclose"' : "") + '></div><div class="sh' + (small ? " small" : "") + '"' + (tc != null ? ' style="border-top:6px solid var(--k' + tc + ')"' : "") + ' role="dialog" aria-modal="true"><div class="shead"><h3' + (tc != null ? ' style="color:var(--k' + tc + ')"' : "") + '>' + esc(title) + '</h3><button class="x" data-a="sclose" aria-label="Chiudi">✕</button></div><div class="sbody">' + body + '</div><div class="sfoot">' + foot + "</div></div>";
 }
-function fld(lb, inner, hint, id) { return '<div class="fld"' + (id ? ' id="' + id + '"' : "") + "><label>" + lb + "</label>" + inner + (hint ? '<div class="hint">' + hint + "</div>" : "") + "</div>"; }
+let ERR = {};
+function fld(lb, inner, hint, id, o) {
+  o = o || {};
+  const er = o.k && ERR[o.k];
+  return '<div class="fld' + (er ? " bad" : "") + '"' + (id ? ' id="' + id + '"' : "") + "><label" + (o.c != null ? ' class="c' + o.c + '"' : "") + ">" + lb + (o.opt ? '<span class="opt">facoltativo</span>' : "") + "</label>" + inner + (er ? '<div class="ferr">' + esc(er) + "</div>" : "") + (hint ? '<div class="hint">' + hint + "</div>" : "") + "</div>";
+}
+function fail(s, er) {
+  s.err = er; drawSheet();
+  const f = document.querySelector("#sheet .fld.bad, #sheet .irow input.bad");
+  if (f) f.scrollIntoView({block:"center", behavior:"smooth"});
+  toast("Compila i campi evidenziati");
+  return false;
+}
+function clearErr(s, t) {
+  if (!s.err) return;
+  const k = t.dataset.f === "yieldN" ? "yield" : t.dataset.f;
+  function unmark() { const w = t.closest(".fld"); if (w) { w.classList.remove("bad"); const m = w.querySelector(".ferr"); if (m) m.remove(); } }
+  if (k === "ing") {
+    t.classList.remove("bad"); if (s.err.rows) delete s.err.rows[t.dataset.i];
+    if (!document.querySelector("#sheet .irow input.bad")) { delete s.err.ing; unmark(); }
+    return;
+  }
+  if (s.err[k] === undefined) return;
+  delete s.err[k]; unmark();
+}
 function opts(list, val) { return list.map(function (x) { return '<option value="' + esc(x) + '"' + (x === val ? " selected" : "") + ">" + esc(x) + "</option>"; }).join(""); }
 function dayOpts(val, none) { return (none ? '<option value="">' + none + "</option>" : "") + KEYS.map(function (k) { return '<option value="' + k + '"' + (k === val ? " selected" : "") + ">" + FULL[k] + "</option>"; }).join(""); }
 function slotOpts(val) { return ["col","pr","sp","ce","prep"].map(function (k) { return '<option value="' + k + '"' + (k === val ? " selected" : "") + ">" + (k === "prep" ? "Solo preparazione" : SLOT_LABEL[k]) + "</option>"; }).join(""); }
-function stepsEditor(list, arr, addLabel, ph) {
+function stepsEditor(list, arr, addLabel, ph, numbered) {
   let h = '<div class="stack">';
   arr.forEach(function (t, i) {
-    h += '<div class="srow"><textarea data-f="' + list + '" data-i="' + i + '" rows="2" placeholder="' + esc(ph) + '">' + esc(t) + '</textarea><div class="mv"><button class="ibtn" data-a="st-up" data-l="' + list + '" data-i="' + i + '" aria-label="Su">↑</button><button class="ibtn" data-a="st-dn" data-l="' + list + '" data-i="' + i + '" aria-label="Giù">↓</button><button class="ibtn" data-a="st-del" data-l="' + list + '" data-i="' + i + '" aria-label="Elimina">✕</button></div></div>';
+    const solo = numbered && arr.length < 2;
+    h += '<div class="srow' + (numbered ? " num" : "") + (solo ? " solo" : "") + '">' + (numbered ? '<span class="sn">' + (i + 1) + "</span>" : "") + '<textarea data-f="' + list + '" data-i="' + i + '" rows="2" placeholder="' + esc(ph) + '">' + esc(t) + '</textarea>' + (solo ? "" : '<div class="mv"><button class="ibtn" data-a="st-up" data-l="' + list + '" data-i="' + i + '" aria-label="Su">↑</button><button class="ibtn" data-a="st-dn" data-l="' + list + '" data-i="' + i + '" aria-label="Giù">↓</button><button class="ibtn" data-a="st-del" data-l="' + list + '" data-i="' + i + '" aria-label="Elimina">✕</button></div>') + "</div>";
   });
   return h + '<button class="addbtn" data-a="st-add" data-l="' + list + '">+ ' + addLabel + "</button></div>";
 }
@@ -1343,11 +1400,11 @@ SH.confirm = {
 /* --- ingrediente --- */
 function openItemSheet(mode, o) {
   o = o || {};
-  const d = {n:"", where:CFG.stores[0], cat:CFG.cats[0], u:"g", pack:"", step:"", max:"", base:"", have:"", qty:"", nw:"", nc:""};
+  const d = {n:"", where:CFG.stores[0], cat:CFG.cats[0], u:"g", pack:"", max:"", base:"", have:"", qty:"", nw:"", nc:""};
   if (mode === "edit") {
     const it = IT[o.id];
     d.n = it.n; d.where = it.where; d.cat = it.cat; d.u = it.u;
-    d.pack = it.exact ? "" : String(it.pack); d.step = String(stepOf(it)); d.max = it.max > 0 ? String(it.max) : "";
+    d.pack = it.exact ? "" : String(it.pack); d.max = it.max > 0 ? String(it.max) : "";
     d.base = it.base > 0 ? String(rnd(it.base / (it.per || 1))) : "";
   }
   if (mode === "spesa" || mode === "recipe") d.n = o.name || "";
@@ -1358,20 +1415,19 @@ SH.item = {
     const d = s.draft, m = s.mode, it = m === "edit" ? IT[s.id] : null;
     const legacy = it && (it.per || it.u === "%");
     const unitList = UNITS.indexOf(d.u) >= 0 ? UNITS : UNITS.concat([d.u]);
-    let b = fld("Nome", '<input data-f="n" value="' + esc(d.n) + '" placeholder="es. Latte" autocomplete="off"' + (m === "spesa" ? ' list="itemlist"' : "") + ">");
+    let b = fld("Nome", '<input data-f="n" value="' + esc(d.n) + '" placeholder="es. Latte" autocomplete="off"' + (m === "spesa" ? ' list="itemlist"' : "") + ">", null, null, {c:2, k:"n"});
     if (m === "spesa") b += '<datalist id="itemlist">' + ITEMS.map(function (x) { return '<option value="' + esc(x.n) + '">'; }).join("") + '</datalist><p class="hint" id="ihint"></p>' +
-      fld("Quanta ne devi comprare", '<div class="inl"><input data-f="qty" inputmode="decimal" value="' + esc(d.qty) + '" placeholder="es. 2"><span class="un" id="qunit"></span></div>');
+      fld("Quanta ne devi comprare", '<div class="inl"><input data-f="qty" inputmode="decimal" value="' + esc(d.qty) + '" placeholder="es. 2"><span class="un" id="qunit"></span></div>', null, null, {c:9, k:"qty"});
     b += '<div class="stack" id="newf">';
-    b += '<div class="row2">' + fld("Dove lo compri", '<select data-f="where">' + opts(CFG.stores, d.where) + '<option value="__new__">➕ Nuovo…</option></select>') + fld("Categoria", '<select data-f="cat">' + opts(CFG.cats, d.cat) + '<option value="__new__">➕ Nuova…</option></select>') + "</div>";
-    b += '<div class="row2"><div class="fld" id="nw-where" hidden><label>Nome del posto</label><input data-f="nw" value="' + esc(d.nw) + '" placeholder="es. Panetteria"></div><div class="fld" id="nw-cat" hidden><label>Nome della categoria</label><input data-f="nc" value="' + esc(d.nc) + '" placeholder="es. Bevande"></div></div>';
-    b += '<div class="row2">' + fld("Unità", '<select data-f="u"' + (legacy ? " disabled" : "") + ">" + opts(unitList, d.u) + "</select>", legacy ? "Questo ingrediente ha una conversione con le ricette: l'unità resta com'è." : "") +
-      fld("Confezione da", '<input data-f="pack" inputmode="decimal" value="' + esc(d.pack) + '" placeholder="vuoto = a peso">', "Lascia vuoto se lo compri a quantità esatta.") + "</div>";
+    b += '<div class="row2">' + fld("Dove lo compri", '<select data-f="where">' + opts(CFG.stores, d.where) + '<option value="__new__">➕ Nuovo…</option></select>', null, null, {c:3, k:"where"}) + fld("Categoria", '<select data-f="cat">' + opts(CFG.cats, d.cat) + '<option value="__new__">➕ Nuova…</option></select>', null, null, {c:4, k:"cat"}) + "</div>";
+    b += '<div class="row2">' + fld("Nome del posto", '<input data-f="nw" value="' + esc(d.nw) + '" placeholder="es. Panetteria">', null, "nw-where", {c:3, k:"nw"}) + fld("Nome della categoria", '<input data-f="nc" value="' + esc(d.nc) + '" placeholder="es. Bevande">', null, "nw-cat", {c:4, k:"nc"}) + "</div>";
+    b += '<div class="row2">' + fld("Unità", '<select data-f="u"' + (legacy ? " disabled" : "") + ">" + opts(unitList, d.u) + "</select>", legacy ? "Questo ingrediente ha una conversione con le ricette: l'unità resta com'è." : "", null, {c:5}) +
+      fld("Confezione da", '<input data-f="pack" inputmode="decimal" value="' + esc(d.pack) + '" placeholder="vuoto = a peso">', "Lascia vuoto se lo compri a quantità esatta.", null, {c:6}) + "</div>";
     if (m !== "spesa") {
-      b += '<div class="row2">' + fld("Massimo da tenere", '<input data-f="max" inputmode="decimal" value="' + esc(d.max) + '" placeholder="automatico">', "Per la barra «Hai X su Y».") +
-        fld("Da avere ogni settimana", '<input data-f="base" inputmode="decimal" value="' + esc(d.base) + '" placeholder="' + (m === "dispensa" ? "come il massimo" : "0") + '">', "Anche senza ricette. Se finisce, va in spesa.") + "</div>";
-      b += fld("Passo dei tasti + e −", '<input data-f="step" inputmode="decimal" value="' + esc(d.step) + '" placeholder="automatico">');
+      b += '<div class="row2">' + fld("Massimo da tenere", '<input data-f="max" inputmode="decimal" value="' + esc(d.max) + '" placeholder="automatico">', "Per la barra «Hai X su Y».", null, {c:7}) +
+        fld("Da avere ogni settimana", '<input data-f="base" inputmode="decimal" value="' + esc(d.base) + '" placeholder="' + (m === "dispensa" ? "come il massimo" : "0") + '">', "Anche senza ricette. Se finisce, va in spesa.", null, {c:8}) + "</div>";
     }
-    if (m === "dispensa") b += fld("Quanta ne hai adesso", '<input data-f="have" inputmode="decimal" value="' + esc(d.have) + '" placeholder="0">');
+    if (m === "dispensa") b += fld("Quanta ne hai adesso", '<input data-f="have" inputmode="decimal" value="' + esc(d.have) + '" placeholder="0">', null, null, {c:9});
     if (it) {
       const used = Object.keys(FOODS).filter(function (id) { return FOODS[id].ing.some(function (p) { return p[0] === it.id; }); });
       if (used.length) b += '<p class="hint">Usato in: ' + used.map(function (id) { return esc(FOODS[id].n); }).join(", ") + ".</p>";
@@ -1379,7 +1435,7 @@ SH.item = {
     }
     b += "</div>";
     const title = m === "edit" ? "Modifica ingrediente" : m === "spesa" ? "Aggiungi alla spesa" : "Nuovo ingrediente";
-    return shell(title, b, '<button class="btn ghost" data-a="sclose">Annulla</button><button class="btn" data-a="ssave">' + (m === "spesa" ? "Aggiungi" : "Salva") + "</button>");
+    return shell(title, b, '<button class="btn ghost" data-a="sclose">Annulla</button><button class="btn" data-a="ssave">' + (m === "spesa" ? "Aggiungi" : "Salva") + "</button>", false, 1);
   },
   sync: function (s) {
     const d = s.draft;
@@ -1394,30 +1450,35 @@ SH.item = {
     }
   },
   save: function (s) {
-    const d = s.draft, m = s.mode, name = trim(d.n);
-    if (!name) { toast("Scrivi il nome"); return false; }
-    if (m === "spesa") {
-      const ex = findItemByName(name), qty = toNum(d.qty);
-      if (!(qty > 0)) { toast("Quanta ne devi comprare?"); return false; }
-      if (ex) {
-        const cur = Math.max(have(ex.id), NEED[ex.id] || 0);
-        ex.base = rnd((cur + qty) * (ex.per || 1));
-        if (ex.max > 0 && ex.max < cur + qty) ex.max = rnd(cur + qty);
-        saveCfg(); toast("Aggiunto alla spesa"); return true;
-      }
+    const d = s.draft, m = s.mode, name = trim(d.n), er = {};
+    const cur = m === "edit" ? IT[s.id] : null;
+    const ex = m === "spesa" && name ? findItemByName(name) : null;
+    const qty = toNum(d.qty);
+    if (!name) er.n = "Scrivi il nome dell'ingrediente";
+    else if (!ex && m !== "spesa") { const other = findItemByName(name); if (other && other !== cur) er.n = "C'è già un ingrediente con questo nome"; }
+    if (m === "spesa" && !(qty > 0)) er.qty = "Scrivi quanta ne devi comprare";
+    if (!ex) {
+      if (d.where === "__new__") { if (!trim(d.nw)) er.nw = "Scrivi il nome del posto"; } else if (!d.where) er.where = "Scegli dove lo compri";
+      if (d.cat === "__new__") { if (!trim(d.nc)) er.nc = "Scrivi il nome della categoria"; } else if (!d.cat) er.cat = "Scegli la categoria";
+    }
+    if (Object.keys(er).length) return fail(s, er);
+    if (ex) {
+      const curQ = Math.max(have(ex.id), NEED[ex.id] || 0);
+      ex.base = rnd((curQ + qty) * (ex.per || 1));
+      if (ex.max > 0 && ex.max < curQ + qty) ex.max = rnd(curQ + qty);
+      saveCfg(); toast("Aggiunto alla spesa"); return true;
     }
     const where = d.where === "__new__" ? trim(d.nw) : d.where, cat = d.cat === "__new__" ? trim(d.nc) : d.cat;
-    if (!where || !cat) { toast("Scegli dove si compra e la categoria"); return false; }
     const it = m === "edit" ? IT[s.id] : {id:uid("i"), exact:true, base:0, pack:1};
-    const other = findItemByName(name);
-    if (other && other !== it) { toast("C'è già un ingrediente con questo nome"); return false; }
+    const oldU = it.u;
     it.n = name; it.where = where; it.cat = cat;
     if (!(it.per || it.u === "%")) it.u = d.u;
     const pk = toNum(d.pack);
     it.pack = pk > 0 ? pk : (it.pack || 1); it.exact = !(pk > 0);
-    const stp = toNum(d.step);
-    it.step = stp > 0 ? stp : (it.u === "g" || it.u === "ml" ? 100 : it.u === "%" ? 10 : 1);
-    if (m === "edit") { delete STEPS[it.id]; lsSet("dp-steps", JSON.stringify(STEPS)); }
+    if (m !== "edit" || it.u !== oldU) {
+      it.step = it.u === "g" || it.u === "ml" ? 100 : it.u === "%" ? 10 : 1;
+      if (m === "edit") { delete STEPS[it.id]; lsSet("dp-steps", JSON.stringify(STEPS)); }
+    }
     if (m !== "spesa") {
       const mx = toNum(d.max); if (mx > 0) it.max = mx; else delete it.max;
       const bs = toNum(d.base);
@@ -1441,8 +1502,8 @@ SH.item = {
 function openDishSheet(fid, o) {
   o = o || {};
   const f = fid ? FOODS[fid] : null;
-  const d = f ? {n:f.n, kind:f.kind, yield:String(f.yield === 2 ? 2 : 1), time:f.time > 0 ? String(f.time) : "", ing:(f.ing || []).filter(function (p) { return IT[p[0]]; }).map(function (p) { return {id:p[0], q:String(p[1])}; }), ingText:(f.ingText || []).join("\n"), steps:(f.steps || []).slice(), tip:f.tip || "", seed:f.seed || 0}
-    : {n:o.name || "", kind:o.kind || "piatto", yield:"1", time:"", ing:[], ingText:"", steps:[""], tip:"", seed:0};
+  const d = f ? {n:f.n, kind:f.kind, yield:(f.yield > 2 ? "+" : String(f.yield === 2 ? 2 : 1)), yieldN:(f.yield > 2 ? String(f.yield) : ""), time:f.time > 0 ? String(f.time) : "", ing:(f.ing || []).filter(function (p) { return IT[p[0]]; }).map(function (p) { return {id:p[0], q:String(rnd(p[1] / (IT[p[0]].per || 1)))}; }), ingText:(f.ingText || []).join("\n"), steps:(f.steps && f.steps.length ? f.steps.slice() : [""]), tip:f.tip || "", seed:f.seed || 0}
+    : {n:o.name || "", kind:o.kind || "piatto", yield:"1", yieldN:"", time:"", ing:[], ingText:"", steps:[""], tip:"", seed:0};
   openSheet({type:"dish", id:fid || null, draft:d, entry:o.entry || null, onDone:o.onDone});
 }
 function draftFood(d) { return {n:trim(d.n) || "Nuovo piatto", ing:d.ing.map(function (r) { return [r.id, 1]; }), seed:d.seed}; }
@@ -1450,30 +1511,39 @@ SH.dish = {
   html: function (s) {
     const d = s.draft, old = s.id ? FOODS[s.id] : null;
     let b = '<div class="aprev"><div id="aprev">' + artOf(old && old.art && !d.seed ? old : draftFood(d), s.id || "preview", 76) + '</div><button class="btn ghost small" data-a="reroll">Cambia disegno</button></div>';
-    b += fld("Nome del piatto", '<input data-f="n" value="' + esc(d.n) + '" placeholder="es. Pasta al pesto" autocomplete="off">');
-    b += '<div class="row2">' + fld("Tipo", '<select data-f="kind">' + Object.keys(KIND_ONE).map(function (k) { return '<option value="' + k + '"' + (k === d.kind ? " selected" : "") + ">" + KIND_ONE[k] + "</option>"; }).join("") + "</select>") +
-      fld("Porzioni", '<select data-f="yield"><option value="1"' + (d.yield === "1" ? " selected" : "") + '>1 pasto</option><option value="2"' + (d.yield === "2" ? " selected" : "") + ">Dose ×2</option></select>") + "</div>";
-    b += fld("Tempo (minuti, facoltativo)", '<input data-f="time" inputmode="numeric" value="' + esc(d.time) + '" placeholder="es. 20">');
+    b += fld("Nome del piatto", '<input data-f="n" value="' + esc(d.n) + '" placeholder="es. Pasta al pesto" autocomplete="off">', null, null, {c:2, k:"n"});
+    b += '<div class="row2">' + fld("Tipo", '<select data-f="kind">' + Object.keys(KIND_ONE).map(function (k) { return '<option value="' + k + '"' + (k === d.kind ? " selected" : "") + ">" + KIND_ONE[k] + "</option>"; }).join("") + "</select>", null, null, {c:3}) +
+      fld("Porzioni", '<select data-f="yield"><option value="1"' + (d.yield === "1" ? " selected" : "") + '>1</option><option value="2"' + (d.yield === "2" ? " selected" : "") + '>2</option><option value="+"' + (d.yield === "+" ? " selected" : "") + '>+</option></select><input data-f="yieldN" id="y-n" inputmode="numeric" value="' + esc(d.yieldN) + '" placeholder="Quante? es. 4" style="margin-top:6px" hidden>', null, null, {c:4, k:"yield"}) + "</div>";
+    b += fld("Tempo (minuti)", '<input data-f="time" inputmode="numeric" value="' + esc(d.time) + '" placeholder="es. 20">', null, null, {c:5, opt:true});
     let ing = '<div class="stack">';
     d.ing.forEach(function (r, i) {
       const it = IT[r.id];
-      ing += '<div class="irow"><div class="iname">' + esc(it ? it.n : "?") + '</div><input data-f="ing" data-k="q" data-i="' + i + '" inputmode="decimal" value="' + esc(r.q) + '" placeholder="quanto"><span class="un">' + esc(runit(it)) + '</span><button class="ibtn" data-a="ing-del" data-i="' + i + '" aria-label="Togli">✕</button></div>';
+      ing += '<div class="irow"><div class="iname">' + esc(it ? it.n : "?") + '</div><input data-f="ing" data-k="q" data-i="' + i + '" inputmode="decimal" value="' + esc(r.q) + '" placeholder="quanto"' + (ERR.rows && ERR.rows[i] ? ' class="bad"' : "") + '><span class="un">' + esc(it ? (it.per ? it.u : runit(it)) : "") + '</span><button class="ibtn" data-a="ing-del" data-i="' + i + '" aria-label="Togli">✕</button></div>';
     });
     const avail = ITEMS.filter(function (x) { return !d.ing.some(function (r) { return r.id === x.id; }); }).sort(function (a, c) { return a.n.localeCompare(c.n, "it"); });
     ing += '<select data-f="ingadd"><option value="">+ Aggiungi un ingrediente…</option><option value="__new__">➕ Nuovo ingrediente…</option>' + avail.map(function (x) { return '<option value="' + x.id + '">' + esc(x.n) + "</option>"; }).join("") + "</select></div>";
-    b += fld("Ingredienti", ing, "Quantità per tutta la cottura (se è dose doppia, per entrambe le porzioni). Servono per calcolare la spesa.");
-    b += fld("Altre note sugli ingredienti", '<textarea data-f="ingText" rows="2" placeholder="Una per riga, es. 2 fette di pane">' + esc(d.ingText) + "</textarea>", "Non vengono contate nella spesa.");
-    b += fld("Come si fa", stepsEditor("steps", d.steps, "Aggiungi un passaggio", "Descrivi il passaggio"));
-    b += fld("Consiglio (facoltativo)", '<textarea data-f="tip" rows="2">' + esc(d.tip) + "</textarea>");
+    b += fld("Ingredienti", ing, "Quantità per tutta la cottura (se è dose doppia, per entrambe le porzioni). Servono per calcolare la spesa.", null, {c:6, k:"ing"});
+    b += fld("Altre note sugli ingredienti", '<textarea data-f="ingText" rows="2" placeholder="Una per riga, es. 2 fette di pane">' + esc(d.ingText) + "</textarea>", "Non vengono contate nella spesa.", null, {c:7});
+    b += fld("Come si fa", stepsEditor("steps", d.steps, "Aggiungi un passaggio", "Descrivi il passaggio", true), null, null, {c:8});
+    b += fld("Consiglio", '<textarea data-f="tip" rows="2">' + esc(d.tip) + "</textarea>", null, null, {c:9, opt:true});
     if (s.id) b += '<div class="stack"><button class="btn ghost" data-a="saveasnew">Salva come nuovo piatto</button><p class="hint">Utile se vuoi una tua versione senza cambiare quella originale' + (s.entry ? ": il pasto di oggi userà la copia" : "") + '.</p><button class="btn ghost danger" data-a="dish-del">Elimina il piatto</button></div>';
-    return shell(s.id ? "Modifica ricetta" : "Nuovo piatto", b, '<button class="btn ghost" data-a="sclose">Annulla</button><button class="btn" data-a="ssave">Salva</button>');
+    return shell(s.id ? "Modifica ricetta" : "Nuovo piatto", b, '<button class="btn ghost" data-a="sclose">Annulla</button><button class="btn" data-a="ssave">Salva</button>', false, 0);
+  },
+  sync: function (s) {
+    const y = document.getElementById("y-n");
+    if (y) y.hidden = s.draft.yield !== "+";
   },
   save: function (s, asNew) {
-    const d = s.draft;
-    if (!trim(d.n)) { toast("Dai un nome al piatto"); return false; }
+    const d = s.draft, er = {};
+    if (!trim(d.n)) er.n = "Dai un nome al piatto";
+    let yl = d.yield === "2" ? 2 : 1;
+    if (d.yield === "+") { const n = parseInt(trim(d.yieldN), 10); if (n >= 1) yl = n; else er.yield = "Scrivi quante porzioni"; }
+    const rows = {}; d.ing.forEach(function (r, i) { if (!(toNum(r.q) > 0)) rows[i] = true; });
+    if (Object.keys(rows).length) { er.ing = "Scrivi la quantità degli ingredienti evidenziati"; er.rows = rows; }
+    if (Object.keys(er).length) return fail(s, er);
     const agg = {}, order = [];
-    d.ing.forEach(function (r) { const q = toNum(r.q); if (IT[r.id] && q > 0) { if (!agg[r.id]) order.push(r.id); agg[r.id] = (agg[r.id] || 0) + q; } });
-    const base = {n:trim(d.n), kind:d.kind, yield:Number(d.yield) === 2 ? 2 : 1, time:toNum(d.time), ing:order.map(function (id) { return [id, rnd(agg[id])]; }), steps:d.steps.map(trim).filter(Boolean), tip:trim(d.tip), seed:d.seed || 0};
+    d.ing.forEach(function (r) { const q = toNum(r.q); if (IT[r.id] && q > 0) { if (!agg[r.id]) order.push(r.id); agg[r.id] = (agg[r.id] || 0) + q * (IT[r.id].per || 1); } });
+    const base = {n:trim(d.n), kind:d.kind, yield:yl, time:toNum(d.time), ing:order.map(function (id) { return [id, rnd(agg[id])]; }), steps:d.steps.map(trim).filter(Boolean), tip:trim(d.tip), seed:d.seed || 0};
     const lines = d.ingText.split("\n").map(trim).filter(Boolean);
     if (lines.length) base.ingText = lines;
     let id = s.id, f;
@@ -1513,11 +1583,11 @@ SH.entry = {
       if (ids.length) sel += '<optgroup label="' + KIND_LABEL[k] + '">' + ids.map(function (id) { return '<option value="' + id + '"' + (id === d.f ? " selected" : "") + ">" + esc(FOODS[id].n) + "</option>"; }).join("") + "</optgroup>";
     });
     sel += "</select>";
-    let b = '<div class="row2">' + fld("Giorno", '<select data-f="day">' + dayOpts(d.day) + "</select>") + fld("Pasto", '<select data-f="slot">' + slotOpts(d.slot) + "</select>") + "</div>";
-    b += fld("Piatto", sel);
-    b += fld("Come lo mangi", '<select data-f="how"><option value="cook"' + (d.how === "cook" ? " selected" : "") + '>Lo preparo quel giorno</option><option value="left"' + (d.how === "left" ? " selected" : "") + ">Avanzi di un altro giorno</option></select>");
-    b += fld("Avanzi di", '<select data-f="from">' + dayOpts(d.from, "Scegli il giorno…") + "</select>", "Gli ingredienti non vengono contati di nuovo nella spesa.", "e-from");
-    if (!s.id) b += '<div class="stack" id="e-eat"><label class="chk"><input type="checkbox" data-f="eat"' + (d.eat ? " checked" : "") + '> Dose doppia: segna anche la seconda porzione</label><div class="row2" id="e-eat2">' + fld("Giorno", '<select data-f="eatDay">' + dayOpts(d.eatDay) + "</select>") + fld("Pasto", '<select data-f="eatSlot">' + slotOpts(d.eatSlot) + "</select>") + "</div></div>";
+    let b = '<div class="row2">' + fld("Giorno", '<select data-f="day">' + dayOpts(d.day) + "</select>", null, null, {c:2}) + fld("Pasto", '<select data-f="slot">' + slotOpts(d.slot) + "</select>", null, null, {c:3}) + "</div>";
+    b += fld("Piatto", sel, null, null, {c:0, k:"f"});
+    b += fld("Come lo mangi", '<select data-f="how"><option value="cook"' + (d.how === "cook" ? " selected" : "") + '>Lo preparo quel giorno</option><option value="left"' + (d.how === "left" ? " selected" : "") + ">Avanzi di un altro giorno</option></select>", null, null, {c:6});
+    b += fld("Avanzi di", '<select data-f="from">' + dayOpts(d.from, "Scegli il giorno…") + "</select>", "Gli ingredienti non vengono contati di nuovo nella spesa.", "e-from", {c:5, k:"from"});
+    if (!s.id) b += '<div class="stack" id="e-eat"><label class="chk"><input type="checkbox" data-f="eat"' + (d.eat ? " checked" : "") + '> <span id="e-eatl">Dose doppia: segna anche la seconda porzione</span></label><div class="row2" id="e-eat2">' + fld("Giorno", '<select data-f="eatDay">' + dayOpts(d.eatDay) + "</select>", null, null, {c:2}) + fld("Pasto", '<select data-f="eatSlot">' + slotOpts(d.eatSlot) + "</select>", null, null, {c:3}) + "</div></div>";
     if (s.id) b += '<button class="btn ghost danger" data-a="entry-del">Togli dal giorno</button>';
     return shell(s.id ? "Sposta o cambia" : "Aggiungi un pasto", b, '<button class="btn ghost" data-a="sclose">Annulla</button><button class="btn" data-a="ssave">Salva</button>');
   },
@@ -1525,13 +1595,17 @@ SH.entry = {
     const d = s.draft, fr = document.getElementById("e-from"), eat = document.getElementById("e-eat"), e2 = document.getElementById("e-eat2");
     if (fr) fr.hidden = d.how !== "left";
     const f = FOODS[d.f];
-    if (eat) eat.hidden = !(f && f.yield === 2 && d.how === "cook" && d.slot !== "prep");
+    if (eat) eat.hidden = !(f && f.yield > 1 && d.how === "cook" && d.slot !== "prep");
+    const el = document.getElementById("e-eatl");
+    if (el && f) el.textContent = f.yield > 2 ? "Dose ×" + f.yield + ": segna anche un'altra porzione (le altre come «Avanzi di»)" : "Dose doppia: segna anche la seconda porzione";
     if (e2) e2.hidden = !d.eat;
   },
   save: function (s) {
     const d = s.draft;
-    if (!d.f || !FOODS[d.f]) { toast("Scegli un piatto"); return false; }
-    if (d.how === "left" && !d.from) { toast("Di quale giorno sono gli avanzi?"); return false; }
+    const er = {};
+    if (!d.f || !FOODS[d.f]) er.f = "Scegli un piatto";
+    if (d.how === "left" && !d.from) er.from = "Di quale giorno sono gli avanzi?";
+    if (Object.keys(er).length) return fail(s, er);
     const from = d.how === "left" ? d.from : null;
     if (s.id) {
       const r = findEntry(s.id);
@@ -1541,7 +1615,7 @@ SH.entry = {
     } else {
       const e = {id:uid("e"), slot:d.slot, f:d.f}; if (from) e.from = from;
       PLAN[d.day].push(e);
-      if (d.eat && !from && FOODS[d.f].yield === 2 && d.slot !== "prep") PLAN[d.eatDay].push({id:uid("e"), slot:d.eatSlot === "prep" ? "pr" : d.eatSlot, f:d.f, from:d.day});
+      if (d.eat && !from && FOODS[d.f].yield > 1 && d.slot !== "prep") PLAN[d.eatDay].push({id:uid("e"), slot:d.eatSlot === "prep" ? "pr" : d.eatSlot, f:d.f, from:d.day});
     }
     ui.day = d.day; ui.dish = null;
     saveCfg(); toast("Salvato");
@@ -1557,7 +1631,7 @@ function openDaySheet(k) {
 SH.day = {
   html: function (s) {
     const d = s.draft;
-    let b = fld("Tempo totale in cucina (minuti, facoltativo)", '<input data-f="time" inputmode="numeric" value="' + esc(d.time) + '" placeholder="es. 70">');
+    let b = fld("Tempo totale in cucina (minuti)", '<input data-f="time" inputmode="numeric" value="' + esc(d.time) + '" placeholder="es. 70">', null, null, {opt:true});
     b += fld("Ordine di lavoro", stepsEditor("order", d.order, "Aggiungi un passaggio", "es. Accendi il forno a 200 °C"), "Solo se cucini più cose insieme.");
     b += fld("Nota del giorno", '<input data-f="nt" value="' + esc(d.nt) + '" placeholder="Titolo, es. Giorno della spesa"><textarea data-f="nb" rows="2" placeholder="Testo della nota">' + esc(d.nb) + '</textarea><label class="chk"><input type="checkbox" data-f="shop"' + (d.shop ? " checked" : "") + "> Mostra il link alla spesa</label>");
     b += fld("Scambia questo giorno con un altro", '<div class="inl"><select data-f="swap">' + dayOpts(d.swap, "Scegli…").replace('<option value="' + s.k + '">' + FULL[s.k] + "</option>", "") + '</select><button class="btn ghost small" data-a="day-swap">Scambia</button></div>', "Cambia di posto pasti, note e ordine di lavoro.");
@@ -1796,7 +1870,9 @@ function onSheetField(e) {
     return true;
   }
   setField(t);
+  clearErr(s, t);
   if (SH[s.type].sync) SH[s.type].sync(s);
+  if (s.type === "dish" && t.dataset.f === "yield" && t.value === "+") { const y = document.getElementById("y-n"); if (y) y.focus(); }
   if (s.type === "dish" && e.type === "change" && (t.dataset.f === "n")) refreshPreview(s);
   return true;
 }
