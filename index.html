@@ -232,6 +232,7 @@ details.meal[open] > summary::after { transform: rotate(90deg); }
 .meal .from { display: block; color: var(--ink-2); font-size: 13px; font-weight: 400; }
 .tag { font-family: var(--f-mono); font-size: 11px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
 .tag.fresh { color: var(--ok); border-color: var(--ok); }
+.done { display: block; margin-top: 2px; font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ok); }
 .recipe { padding: 4px 0 18px; display: flex; flex-direction: column; gap: 14px; }
 .rhead { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 14px; align-items: center; }
 .rmeta { display: flex; flex-direction: column; gap: 6px; }
@@ -830,7 +831,7 @@ const EMO_SRC = [
   ["insalata lattuga friarielli rucola spinaci bietole bietola cavolo verza radicchio sedano finocchio indivia","🥬"],["broccoli cavolfiore","🥦"],["carota carote","🥕"],["cipolla cipolle cipollotto scalogno porro","🧅"],["aglio","🧄"],["patata patate","🥔"],
   ["melanzana melanzane","🍆"],["zucchina zucchine cetriolo cetrioli","🥒"],["peperone peperoni","🫑"],["peperoncino","🌶️"],["mais","🌽"],["funghi fungo champignon porcini","🍄"],["avocado","🥑"],["zucca","🎃"],
   ["basilico prezzemolo rosmarino salvia timo origano menta erbe pesto","🌿"],["limone limoni","🍋"],["mela mele","🍎"],["pera pere","🍐"],["banana banane","🍌"],["arancia arance mandarini mandarino clementine pompelmo","🍊"],
-  ["fragola fragole","🍓"],["uva","🍇"],["pesca pesche albicocca albicocche nettarine","🍑"],["ciliegia ciliegie","🍒"],["anguria cocomero","🍉"],["melone","🍈"],["ananas","🍍"],["kiwi","🥝"],["mango","🥭"],["mirtilli lamponi frutti bosco","🫐"],["cocco","🥥"],["frutta","🍎"],
+  ["fragola fragole","🍓"],["uva","🍇"],["pesca pesche albicocca albicocche nettarine","🍑"],["ciliegia ciliegie","🍒"],["anguria cocomero","🍉"],["melone","🍈"],["ananas","🍍"],["kiwi","🥝"],["mango","🥭"],["mirtilli lamponi frutti bosco","🫐"],["cocco","🥥"],["frutta frutto frutti","🍎"],
   ["arachidi noci mandorle nocciole pistacchi anacardi secca","🥜"],["castagne","🌰"],["miele marmellata confettura","🍯"],["cioccolato cacao nutella","🍫"],["avena cereali muesli fiocchi corn flakes","🥣"],["farina amido","🌾"],
   ["sale","🧂"],["olio olive","🫒"],["zucchero","🍬"],["brodo dado minestrone","🍲"],["maionese ketchup senape salsa","🥫"],["acqua","💧"],["vino","🍷"],["birra","🍺"],["caffe","☕"],["te tisana","🍵"]
 ];
@@ -850,7 +851,13 @@ const EMO_CACHE = {};
 function guessEmoji(name) {
   const key = String(name || "");
   if (key in EMO_CACHE) return EMO_CACHE[key];
-  const words = key.replace(/\(.*?\)/g, " ").split(/[^\p{L}]+/u).map(emoNorm).filter(function (w) { return w.length >= 3; });
+  const alts = key.replace(/\(.*?\)/g, " ").split(/\s+o\s+/i);
+  for (let a = 0; a < alts.length; a++) { const g = guessEmojiPart(alts[a]); if (g) { EMO_CACHE[key] = g; return g; } }
+  EMO_CACHE[key] = "";
+  return "";
+}
+function guessEmojiPart(key) {
+  const words = key.split(/[^\p{L}]+/u).map(emoNorm).filter(function (w) { return w.length >= 3; });
   let found = "";
   words.forEach(function (w) {
     const ws = emoStem(w);
@@ -859,9 +866,9 @@ function guessEmoji(name) {
     if (!hit && ws.length >= 5) for (let i = 0; i < EMO_STEMS.length && !hit; i++) { const ks = EMO_STEMS[i][1]; if (ks.length >= 4 && (lev1(ws, ks) || (ks.length >= 5 && ws.length - ks.length >= 0 && ws.length - ks.length <= 2 && ws.indexOf(ks) === 0))) hit = EMO_STEMS[i][2]; }
     if (hit) found = hit;
   });
-  EMO_CACHE[key] = found;
   return found;
 }
+function icoText(t) { const e = guessEmoji(t); return e ? e + " " : ""; }
 function emojiOf(it) { return it && it.emo !== undefined ? it.emo : guessEmoji(it && it.n); }
 function ico(it) { const e = emojiOf(it); return e ? e + " " : ""; }
 function storeColor(w) { return STORE_COL0[w] || PALETTE[(CFG.stores.indexOf(w) + 3) % PALETTE.length]; }
@@ -1181,7 +1188,7 @@ function recipe(fid, ctx, e) {
   if (hasIng || hasTxt) {
     h += '<ul class="list">';
     (f.ing || []).forEach(function (p) { if (IT[p[0]]) h += "<li><span>" + esc(ico(IT[p[0]]) + IT[p[0]].n) + '</span><span class="q">' + esc(recFmt(p[0], p[1])) + "</span></li>"; });
-    (f.ingText || []).forEach(function (t) { h += "<li><span>" + esc(t) + "</span></li>"; });
+    (f.ingText || []).forEach(function (t) { h += "<li><span>" + esc(icoText(t) + t) + "</span></li>"; });
     h += "</ul>";
   } else h += '<p class="tip">Nessun ingrediente: toccando «Modifica ricetta» puoi aggiungerli.</p>';
   h += "</div>";
@@ -1249,9 +1256,9 @@ function viewDay(k) {
     ents.filter(function (e) { return e.slot === sl; }).forEach(function (meal) {
       const f = FOODS[meal.f], key = meal.id;
       const isOpen = ui.open[key] ? " open" : "";
-      const tag = meal.from ? '<span class="tag">dal frigo</span>' : (f.kind === "piatto" && f.ing && f.ing.length ? '<span class="tag fresh">appena fatto</span>' : "");
+      const tag = "", done = !meal.from && cookedKey(k, meal.f) ? '<span class="done">✓ cucinato</span>' : "";
       h += '<details class="meal" data-key="' + key + '"' + isOpen + '><summary><span class="label ml-' + sl + '">' + SLOT_LABEL[sl] + '</span><span class="nm">' + esc(f.n) +
-        (meal.from && FULL[meal.from] ? '<span class="from">Cucinato ' + FULL[meal.from].toLowerCase() + ": scalda 2 minuti</span>" : "") + "</span>" + tag + "</summary>" +
+        (meal.from && FULL[meal.from] ? '<span class="from">Cucinato ' + FULL[meal.from].toLowerCase() + ": scalda 2 minuti</span>" : "") + done + "</span>" + tag + "</summary>" +
         recipe(meal.f, key, meal) + "</details>";
     });
   });
