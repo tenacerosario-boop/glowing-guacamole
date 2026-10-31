@@ -830,23 +830,23 @@ function linkSteps(f, text) {
 }
 /* ---------- emoji degli ingredienti ---------- */
 const EMO_SRC = [
-  ["riso risotto basmati","🍚"],["pasta spaghetti penne fusilli rigatoni tagliatelle linguine farfalle maccheroni tortellini ravioli lasagne gnocchi orecchiette","🍝"],
-  ["pane filone baguette panino panini toast pancarre","🍞"],["cornetto croissant brioche","🥐"],["pizza","🍕"],["sfoglia torta crostata","🥧"],["biscotti biscotto frollini","🍪"],["cracker grissini taralli","🥨"],
-  ["pollo tacchino petto cosce","🍗"],["manzo carne macinato bistecca vitello hamburger","🥩"],["pancetta speck bacon prosciutto salame mortadella bresaola guanciale","🥓"],["salsiccia salsicce wurstel","🌭"],["maiale costine arrosto","🍖"],
-  ["pesce merluzzo salmone orata branzino nasello platessa sogliola tonno sgombro acciughe alici sardine","🐟"],["gamberi gamberetti scampi mazzancolle","🍤"],["calamari totani seppie polpo","🦑"],["cozze vongole","🦪"],
-  ["uova uovo","🥚"],["latte yogurt kefir panna","🥛"],["formaggio parmigiano grana pecorino provola mozzarella ricotta mascarpone stracchino scamorza fontina gorgonzola feta formaggini","🧀"],["burro","🧈"],
-  ["pomodoro pomodori pomodorini passata pelati sugo polpa","🍅"],["ceci fagioli lenticchie soia borlotti cannellini legumi","🫘"],["piselli fagiolini","🫛"],
-  ["insalata lattuga friarielli rucola spinaci bietole bietola cavolo verza radicchio sedano finocchio indivia","🥬"],["broccoli cavolfiore","🥦"],["carota carote","🥕"],["cipolla cipolle cipollotto scalogno porro","🧅"],["aglio","🧄"],["patata patate","🥔"],
-  ["melanzana melanzane","🍆"],["zucchina zucchine cetriolo cetrioli","🥒"],["peperone peperoni","🫑"],["peperoncino","🌶️"],["mais","🌽"],["funghi fungo champignon porcini","🍄"],["avocado","🥑"],["zucca","🎃"],
-  ["basilico prezzemolo rosmarino salvia timo origano menta erbe pesto","🌿"],["limone limoni","🍋"],["mela mele","🍎"],["pera pere","🍐"],["banana banane","🍌"],["arancia arance mandarini mandarino clementine pompelmo","🍊"],
-  ["fragola fragole","🍓"],["uva","🍇"],["pesca pesche albicocca albicocche nettarine","🍑"],["ciliegia ciliegie","🍒"],["anguria cocomero","🍉"],["melone","🍈"],["ananas","🍍"],["kiwi","🥝"],["mango","🥭"],["mirtilli lamponi frutti bosco","🫐"],["cocco","🥥"],["frutta frutto frutti","🍎"],
-  ["arachidi noci mandorle nocciole pistacchi anacardi secca","🥜"],["castagne","🌰"],["miele marmellata confettura","🍯"],["cioccolato cacao nutella","🍫"],["avena cereali muesli fiocchi corn flakes","🥣"],["farina amido","🌾"],
-  ["sale","🧂"],["olio olive","🫒"],["zucchero","🍬"],["brodo dado minestrone","🍲"],["maionese ketchup senape salsa","🥫"],["acqua","💧"],["vino","🍷"],["birra","🍺"],["caffe","☕"],["te tisana","🍵"]
+  ["riso risotto basmati","🍚","Pasta e riso"],["pasta spaghetti penne fusilli rigatoni tagliatelle linguine farfalle maccheroni tortellini ravioli lasagne gnocchi orecchiette","🍝","Pasta e riso"],
+  ["pane filone baguette panino panini toast pancarre","🍞","Colazione e forno"],["cornetto croissant brioche","🥐","Colazione e forno"],["pizza","🍕","Colazione e forno"],["sfoglia torta crostata","🥧","Colazione e forno"],["biscotti biscotto frollini","🍪","Colazione e forno"],["cracker grissini taralli","🥨","Colazione e forno"],
+  ["pollo tacchino petto cosce","🍗","Carne e salumi"],["manzo carne macinato bistecca vitello hamburger","🥩","Carne e salumi"],["pancetta speck bacon prosciutto salame mortadella bresaola guanciale","🥓","Carne e salumi"],["salsiccia salsicce wurstel","🌭","Carne e salumi"],["maiale costine arrosto","🍖","Carne e salumi"],
+  ["pesce merluzzo salmone orata branzino nasello platessa sogliola","🐟","Carne e salumi"],["tonno sgombro acciughe alici sardine","🐟","Scatolame e sughi"],["gamberi gamberetti scampi mazzancolle","🍤","Surgelati"],["calamari totani seppie polpo","🦑","Surgelati"],["cozze vongole","🦪","Surgelati"],
+  ["uova uovo","🥚","Uova e latticini"],["latte yogurt kefir panna","🥛","Uova e latticini"],["formaggio parmigiano grana pecorino provola mozzarella ricotta mascarpone stracchino scamorza fontina gorgonzola feta formaggini","🧀","Uova e latticini"],["burro","🧈","Uova e latticini"],
+  ["pomodoro pomodori pomodorini","🍅","Verdura"],["passata pelati sugo polpa","🍅","Scatolame e sughi"],["ceci fagioli lenticchie soia borlotti cannellini legumi","🫘","Scatolame e sughi"],["piselli fagiolini","🫛","Verdura"],
+  ["insalata lattuga friarielli rucola spinaci bietole bietola cavolo verza radicchio sedano finocchio indivia","🥬","Verdura"],["broccoli cavolfiore","🥦","Verdura"],["carota carote","🥕","Verdura"],["cipolla cipolle cipollotto scalogno porro","🧅","Verdura"],["aglio","🧄","Verdura"],["patata patate","🥔","Verdura"],
+  ["melanzana melanzane","🍆","Verdura"],["zucchina zucchine cetriolo cetrioli","🥒","Verdura"],["peperone peperoni","🫑","Verdura"],["peperoncino","🌶️","Verdura"],["mais","🌽","Verdura"],["funghi fungo champignon porcini","🍄","Verdura"],["avocado","🥑","Frutta"],["zucca","🎃","Verdura"],
+  ["basilico prezzemolo rosmarino salvia timo origano menta erbe","🌿","Verdura"],["pesto","🌿","Scatolame e sughi"],["limone limoni","🍋","Frutta"],["mela mele","🍎","Frutta"],["pera pere","🍐","Frutta"],["banana banane","🍌","Frutta"],["arancia arance mandarini mandarino clementine pompelmo","🍊","Frutta"],
+  ["fragola fragole","🍓","Frutta"],["uva","🍇","Frutta"],["pesca pesche albicocca albicocche nettarine","🍑","Frutta"],["ciliegia ciliegie","🍒","Frutta"],["anguria cocomero","🍉","Frutta"],["melone","🍈","Frutta"],["ananas","🍍","Frutta"],["kiwi","🥝","Frutta"],["mango","🥭","Frutta"],["mirtilli lamponi frutti bosco","🫐","Frutta"],["cocco","🥥","Frutta"],["frutta frutto frutti","🍎","Frutta"],
+  ["arachidi noci mandorle nocciole pistacchi anacardi secca","🥜","Colazione e forno"],["castagne","🌰","Colazione e forno"],["miele marmellata confettura","🍯","Colazione e forno"],["cioccolato cacao nutella","🍫","Colazione e forno"],["avena cereali muesli fiocchi corn flakes","🥣","Colazione e forno"],["farina amido","🌾","Colazione e forno"],
+  ["sale","🧂","Condimenti"],["olio olive","🫒","Condimenti"],["zucchero","🍬","Condimenti"],["brodo dado minestrone","🍲","Scatolame e sughi"],["maionese ketchup senape salsa","🥫","Condimenti"],["acqua","💧",""],["vino","🍷",""],["birra","🍺",""],["caffe","☕",""],["te tisana","🍵",""]
 ];
 const EMO_MAP = {};
 function emoNorm(w) { return String(w).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z]/g, ""); }
 function emoStem(w) { return w.length > 3 ? w.replace(/[aeiou]$/, "") : w; }
-EMO_SRC.forEach(function (r) { r[0].split(" ").forEach(function (k) { const n = emoNorm(k); if (n) EMO_MAP[n] = r[1]; }); });
+EMO_SRC.forEach(function (r) { r[0].split(" ").forEach(function (k) { const n = emoNorm(k); if (n) EMO_MAP[n] = {e:r[1], c:r[2]}; }); });
 const EMO_STEMS = Object.keys(EMO_MAP).map(function (k) { return [k, emoStem(k), EMO_MAP[k]]; });
 function lev1(a, b) {
   if (a === b) return true;
@@ -856,25 +856,39 @@ function lev1(a, b) {
   return a.length > b.length ? a.slice(i + 1) === b.slice(i) : b.slice(i + 1) === a.slice(i);
 }
 const EMO_CACHE = {};
-function guessEmoji(name) {
+function guessInfo(name) {
   const key = String(name || "");
   if (key in EMO_CACHE) return EMO_CACHE[key];
   const alts = key.replace(/\(.*?\)/g, " ").split(/\s+o\s+/i);
-  for (let a = 0; a < alts.length; a++) { const g = guessEmojiPart(alts[a]); if (g) { EMO_CACHE[key] = g; return g; } }
-  EMO_CACHE[key] = "";
-  return "";
+  let res = null;
+  for (let a = 0; a < alts.length && !res; a++) res = guessInfoPart(alts[a]);
+  EMO_CACHE[key] = res;
+  return res;
 }
-function guessEmojiPart(key) {
+function guessInfoPart(key) {
   const words = key.split(/[^\p{L}]+/u).map(emoNorm).filter(function (w) { return w.length >= 3; });
-  let found = "";
+  let found = null;
   words.forEach(function (w) {
     const ws = emoStem(w);
-    let hit = EMO_MAP[w] || "";
+    let hit = EMO_MAP[w] || null;
     if (!hit) for (let i = 0; i < EMO_STEMS.length && !hit; i++) { if (EMO_STEMS[i][1] === ws && ws.length >= 3) hit = EMO_STEMS[i][2]; }
     if (!hit && ws.length >= 5) for (let i = 0; i < EMO_STEMS.length && !hit; i++) { const ks = EMO_STEMS[i][1]; if (ks.length >= 4 && (lev1(ws, ks) || (ks.length >= 5 && ws.length - ks.length >= 0 && ws.length - ks.length <= 2 && ws.indexOf(ks) === 0))) hit = EMO_STEMS[i][2]; }
     if (hit) found = hit;
   });
   return found;
+}
+function guessEmoji(name) { const i = guessInfo(name); return i ? i.e : ""; }
+function suggestCat(name) {
+  const inf = guessInfo(name);
+  const c = /surgel|congelat/i.test(String(name || "")) ? "Surgelati" : (inf && inf.c);
+  if (!c) return "";
+  return CFG.cats.filter(function (x) { return String(x).toLowerCase() === c.toLowerCase(); })[0] || "";
+}
+function suggestWhere(cat) {
+  const cnt = {}; let best = "", n = 0;
+  ITEMS.forEach(function (x) { if (x.cat === cat) cnt[x.where] = (cnt[x.where] || 0) + 1; });
+  Object.keys(cnt).forEach(function (w) { if (cnt[w] > n) { n = cnt[w]; best = w; } });
+  return best;
 }
 function icoText(t) { const e = guessEmoji(t); return e ? e + " " : ""; }
 function emojiOf(it) { return it && it.emo !== undefined ? it.emo : guessEmoji(it && it.n); }
@@ -1474,10 +1488,10 @@ SH.confirm = {
 /* --- ingrediente --- */
 function openItemSheet(mode, o) {
   o = o || {};
-  const d = {n:"", where:CFG.stores[0], cat:CFG.cats[0], u:"g", pack:"", max:"", base:"", have:"", qty:"", nw:"", nc:"", emo:"", emoT:false};
+  const d = {n:"", where:CFG.stores[0], cat:CFG.cats[0], u:"g", pack:"", max:"", base:"", have:"", qty:"", nw:"", nc:"", emo:"", emoT:false, catT:false, whereT:false};
   if (mode === "edit") {
     const it = IT[o.id];
-    d.n = it.n; d.where = it.where; d.cat = it.cat; d.u = it.u; d.emo = emojiOf(it); d.emoT = it.emo !== undefined;
+    d.n = it.n; d.where = it.where; d.cat = it.cat; d.u = it.u; d.emo = emojiOf(it); d.emoT = it.emo !== undefined; d.catT = true; d.whereT = true;
     d.pack = it.exact ? "" : String(it.pack); d.max = it.max > 0 ? String(it.max) : "";
     d.base = it.base > 0 ? String(rnd(it.base / (it.per || 1))) : "";
   }
@@ -1516,6 +1530,11 @@ SH.item = {
     const w = document.getElementById("nw-where"), c = document.getElementById("nw-cat");
     if (w) w.hidden = d.where !== "__new__";
     if (c) c.hidden = d.cat !== "__new__";
+    if (!(s.mode === "spesa" && findItemByName(d.n)) && suggestCat(d.n)) {
+      function setSel(f, v) { const el = document.querySelector('#sheet [data-f="' + f + '"]'); if (el) el.value = v; }
+      if (!d.catT) { const c = suggestCat(d.n); if (d.cat !== c) { d.cat = c; setSel("cat", c); } }
+      if (!d.whereT && d.cat !== "__new__") { const w = suggestWhere(d.cat); if (w && d.where !== w) { d.where = w; setSel("where", w); } }
+    }
     if (!d.emoT) { d.emo = guessEmoji(d.n); const ei = document.getElementById("emo-in"); if (ei && ei.value !== d.emo) ei.value = d.emo; }
     if (s.mode === "spesa") {
       const ew = document.getElementById("emo-w"); if (ew) ew.hidden = !!findItemByName(d.n);
@@ -1948,6 +1967,8 @@ function onSheetField(e) {
   }
   setField(t);
   if (t.dataset.f === "emo") s.draft.emoT = true;
+  if (s.type === "item" && t.dataset.f === "cat") s.draft.catT = true;
+  if (s.type === "item" && t.dataset.f === "where") s.draft.whereT = true;
   clearErr(s, t);
   if (SH[s.type].sync) SH[s.type].sync(s);
   if (s.type === "dish" && t.dataset.f === "yield" && t.value === "+") { const y = document.getElementById("y-n"); if (y) y.focus(); }
