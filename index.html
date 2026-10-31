@@ -805,6 +805,65 @@ function computeNeed() {
 function toU(id, q) { return Math.round(q / (IT[id].per || 1) * 1000) / 1000; }
 function runit(it) { return it ? (it.per ? it.ru : it.u) : ""; }
 function recFmt(id, q) { const it = IT[id]; return fmt(q, runit(it)); }
+function linkSteps(f, text) {
+  let out = String(text);
+  (f.ing || []).forEach(function (p) {
+    const it = IT[p[0]]; if (!it) return;
+    const w = String(it.n).replace(/\(.*$/, "").trim().split(/\s+/)[0].toLowerCase().replace(/[^\p{L}]/gu, "");
+    if (w.length < 3) return;
+    const root = w.length >= 6 ? w.slice(0, -1) : w;
+    const ru = String(runit(it) || "").toLowerCase().replace(/[^\p{L}]/gu, "");
+    const units = "kg|g|ml|cl|l" + (ru.length >= 4 ? "|" + ru.slice(0, 4) + "\\p{L}*" : "");
+    const re = new RegExp("(?<![\\d.,])\\d+(?:[.,]\\d+)?\\s*(?:" + units + ")(?!\\p{L})(?=\\s*(?:(?:di|del|dello|della|dei|degli|delle)\\s+|d['’]\\s*)?(?:\\p{L}+\\s+){0,2}?" + root + ")", "giu");
+    out = out.replace(re, function () { return recFmt(p[0], p[1]); });
+  });
+  return out;
+}
+/* ---------- emoji degli ingredienti ---------- */
+const EMO_SRC = [
+  ["riso risotto basmati","🍚"],["pasta spaghetti penne fusilli rigatoni tagliatelle linguine farfalle maccheroni tortellini ravioli lasagne gnocchi orecchiette","🍝"],
+  ["pane filone baguette panino panini toast pancarre","🍞"],["cornetto croissant brioche","🥐"],["pizza","🍕"],["sfoglia torta crostata","🥧"],["biscotti biscotto frollini","🍪"],["cracker grissini taralli","🥨"],
+  ["pollo tacchino petto cosce","🍗"],["manzo carne macinato bistecca vitello hamburger","🥩"],["pancetta speck bacon prosciutto salame mortadella bresaola guanciale","🥓"],["salsiccia salsicce wurstel","🌭"],["maiale costine arrosto","🍖"],
+  ["pesce merluzzo salmone orata branzino nasello platessa sogliola tonno sgombro acciughe alici sardine","🐟"],["gamberi gamberetti scampi mazzancolle","🍤"],["calamari totani seppie polpo","🦑"],["cozze vongole","🦪"],
+  ["uova uovo","🥚"],["latte yogurt kefir panna","🥛"],["formaggio parmigiano grana pecorino provola mozzarella ricotta mascarpone stracchino scamorza fontina gorgonzola feta formaggini","🧀"],["burro","🧈"],
+  ["pomodoro pomodori pomodorini passata pelati sugo polpa","🍅"],["ceci fagioli lenticchie soia borlotti cannellini legumi","🫘"],["piselli fagiolini","🫛"],
+  ["insalata lattuga friarielli rucola spinaci bietole bietola cavolo verza radicchio sedano finocchio indivia","🥬"],["broccoli cavolfiore","🥦"],["carota carote","🥕"],["cipolla cipolle cipollotto scalogno porro","🧅"],["aglio","🧄"],["patata patate","🥔"],
+  ["melanzana melanzane","🍆"],["zucchina zucchine cetriolo cetrioli","🥒"],["peperone peperoni","🫑"],["peperoncino","🌶️"],["mais","🌽"],["funghi fungo champignon porcini","🍄"],["avocado","🥑"],["zucca","🎃"],
+  ["basilico prezzemolo rosmarino salvia timo origano menta erbe pesto","🌿"],["limone limoni","🍋"],["mela mele","🍎"],["pera pere","🍐"],["banana banane","🍌"],["arancia arance mandarini mandarino clementine pompelmo","🍊"],
+  ["fragola fragole","🍓"],["uva","🍇"],["pesca pesche albicocca albicocche nettarine","🍑"],["ciliegia ciliegie","🍒"],["anguria cocomero","🍉"],["melone","🍈"],["ananas","🍍"],["kiwi","🥝"],["mango","🥭"],["mirtilli lamponi frutti bosco","🫐"],["cocco","🥥"],["frutta","🍎"],
+  ["arachidi noci mandorle nocciole pistacchi anacardi secca","🥜"],["castagne","🌰"],["miele marmellata confettura","🍯"],["cioccolato cacao nutella","🍫"],["avena cereali muesli fiocchi corn flakes","🥣"],["farina amido","🌾"],
+  ["sale","🧂"],["olio olive","🫒"],["zucchero","🍬"],["brodo dado minestrone","🍲"],["maionese ketchup senape salsa","🥫"],["acqua","💧"],["vino","🍷"],["birra","🍺"],["caffe","☕"],["te tisana","🍵"]
+];
+const EMO_MAP = {};
+function emoNorm(w) { return String(w).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z]/g, ""); }
+function emoStem(w) { return w.length > 3 ? w.replace(/[aeiou]$/, "") : w; }
+EMO_SRC.forEach(function (r) { r[0].split(" ").forEach(function (k) { const n = emoNorm(k); if (n) EMO_MAP[n] = r[1]; }); });
+const EMO_STEMS = Object.keys(EMO_MAP).map(function (k) { return [k, emoStem(k), EMO_MAP[k]]; });
+function lev1(a, b) {
+  if (a === b) return true;
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  if (a.length === b.length) return a.slice(i + 1) === b.slice(i + 1) || (a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2));
+  return a.length > b.length ? a.slice(i + 1) === b.slice(i) : b.slice(i + 1) === a.slice(i);
+}
+const EMO_CACHE = {};
+function guessEmoji(name) {
+  const key = String(name || "");
+  if (key in EMO_CACHE) return EMO_CACHE[key];
+  const words = key.replace(/\(.*?\)/g, " ").split(/[^\p{L}]+/u).map(emoNorm).filter(function (w) { return w.length >= 3; });
+  let found = "";
+  words.forEach(function (w) {
+    const ws = emoStem(w);
+    let hit = EMO_MAP[w] || "";
+    if (!hit) for (let i = 0; i < EMO_STEMS.length && !hit; i++) { if (EMO_STEMS[i][1] === ws && ws.length >= 3) hit = EMO_STEMS[i][2]; }
+    if (!hit && ws.length >= 5) for (let i = 0; i < EMO_STEMS.length && !hit; i++) { const ks = EMO_STEMS[i][1]; if (ks.length >= 4 && (lev1(ws, ks) || (ks.length >= 5 && ws.length - ks.length >= 0 && ws.length - ks.length <= 2 && ws.indexOf(ks) === 0))) hit = EMO_STEMS[i][2]; }
+    if (hit) found = hit;
+  });
+  EMO_CACHE[key] = found;
+  return found;
+}
+function emojiOf(it) { return it && it.emo !== undefined ? it.emo : guessEmoji(it && it.n); }
+function ico(it) { const e = emojiOf(it); return e ? e + " " : ""; }
 function storeColor(w) { return STORE_COL0[w] || PALETTE[(CFG.stores.indexOf(w) + 3) % PALETTE.length]; }
 const CAT_COL = {"verdura":["#2E9B4F","#fff"],"frutta":["#E86A9E","#fff"],"pasta e riso":["#F2C21B","#2B2017"],"carne e salumi":["#C8312B","#fff"],"surgelati":["#4FB3E8","#0B2A3D"],"uova e latticini":["#FFFFFF","#000"],"scatolame e sughi":["#F28A1E","#2B1700"],"colazione e forno":["#7A1F3D","#fff"],"condimenti":["#8E5BA8","#fff"],"condimento":["#8E5BA8","#fff"]};
 function catStyle(name) {
@@ -1109,7 +1168,7 @@ function ingredientRows(agg) {
   return Object.keys(agg).filter(function (id) { return IT[id]; }).map(function (id) {
     const it = IT[id], q = toU(id, agg[id]), h = have(id);
     const chip = h >= q ? '<span class="chip ok">ce l\'hai</span>' : '<span class="chip ' + (h > 0 ? "warn" : "bad") + '">mancano ' + esc(fmt(q - h, it.u)) + "</span>";
-    return '<div class="ing"><span>' + esc(it.n) + '</span><span class="q">' + esc(recFmt(id, agg[id])) + "</span>" + chip + "</div>";
+    return '<div class="ing"><span>' + esc(ico(it) + it.n) + '</span><span class="q">' + esc(recFmt(id, agg[id])) + "</span>" + chip + "</div>";
   }).join("");
 }
 
@@ -1121,14 +1180,14 @@ function recipe(fid, ctx, e) {
   h += '<div class="rsec"><div class="rh">Ingredienti</div>';
   if (hasIng || hasTxt) {
     h += '<ul class="list">';
-    (f.ing || []).forEach(function (p) { if (IT[p[0]]) h += "<li><span>" + esc(IT[p[0]].n) + '</span><span class="q">' + esc(recFmt(p[0], p[1])) + "</span></li>"; });
+    (f.ing || []).forEach(function (p) { if (IT[p[0]]) h += "<li><span>" + esc(ico(IT[p[0]]) + IT[p[0]].n) + '</span><span class="q">' + esc(recFmt(p[0], p[1])) + "</span></li>"; });
     (f.ingText || []).forEach(function (t) { h += "<li><span>" + esc(t) + "</span></li>"; });
     h += "</ul>";
   } else h += '<p class="tip">Nessun ingrediente: toccando «Modifica ricetta» puoi aggiungerli.</p>';
   h += "</div>";
   if (f.steps && f.steps.length) {
     h += '<div class="rsec"><div class="rh">Come si fa</div><ol class="steps">';
-    f.steps.forEach(function (s) { h += "<li>" + esc(s) + "</li>"; });
+    f.steps.forEach(function (s) { h += "<li>" + esc(linkSteps(f, s)) + "</li>"; });
     h += "</ol></div>";
   }
   if (f.tip) h += '<p class="tipbox"><b>Consiglio</b>' + esc(f.tip) + "</p>";
@@ -1147,7 +1206,7 @@ function dishView(k, fid) {
   const miss = Object.keys(agg).filter(function (id) { return have(id) < toU(id, agg[id]); }).length;
   let h = '<button class="btn ghost small" data-a="back">‹ Le ricette di oggi</button><div class="row1"><h3>' + esc(f.n) + '</h3>' + (f.time > 0 ? '<span class="time">circa ' + f.time + ' min</span>' : "") + '</div>';
   h += '<div class="ings">' + ingredientRows(agg) + "</div>";
-  if (f.steps && f.steps.length) h += '<ol class="steps">' + f.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>";
+  if (f.steps && f.steps.length) h += '<ol class="steps">' + f.steps.map(function (s) { return "<li>" + esc(linkSteps(f, s)) + "</li>"; }).join("") + "</ol>";
   if (f.tip) h += '<p class="tip">' + esc(f.tip) + "</p>";
   if (!dn && miss > 0) h += '<div class="note">Mancano ' + miss + ' ingredienti. <a href="#spesa" data-a="tab" data-t="spesa">Apri la spesa</a></div>';
   h += dn ? '<div class="row1"><span class="chip ok">Cucinato: dispensa aggiornata</span><button class="btn ghost small" data-a="undo" data-key="' + dn + '">Annulla</button></div>' : '<button class="btn" data-a="cooked" data-k="' + k + '" data-f="' + fid + '">Ho cucinato: togli dalla dispensa</button>';
@@ -1209,7 +1268,7 @@ function viewDay(k) {
   const its = ITEMS.slice().sort(function (a, b) { return a.n.localeCompare(b.n, "it"); });
   h += '<details class="group rec" data-key="ing" style="--c:var(--k1)"' + (ui.open.ing ? " open" : "") + '><summary class="label" style="padding:2px 0;cursor:pointer;color:var(--k1);font-weight:700;font-size:9px">Lista ingredienti · ' + its.length + '</summary>';
   its.forEach(function (it) {
-    h += '<div class="dl il"><div class="dn"><b>' + esc(it.n) + '</b><span>' + esc(it.where + " · " + it.cat + " · " + runit(it).replace("%", "% di confezione")) + '</span></div><button class="btn ghost small" data-a="iedit" data-i="' + it.id + '">Modifica</button></div>';
+    h += '<div class="dl il"><div class="dn"><b>' + esc(ico(it) + it.n) + '</b><span>' + esc(it.where + " · " + it.cat + " · " + runit(it).replace("%", "% di confezione")) + '</span></div><button class="btn ghost small" data-a="iedit" data-i="' + it.id + '">Modifica</button></div>';
   });
   if (!its.length) h += '<p class="nothing">Nessun ingrediente ancora.</p>';
   h += '</details>';
@@ -1237,7 +1296,7 @@ function pitem(it) {
   const h = have(it.id), mx = maxOf(it), r = mx > 0 ? h / mx : 1;
   const unused = (NEED[it.id] || 0) <= 0 && !(it.max > 0);
   const st = unused ? ["non serve","ok"] : h <= 0 ? ["finito","bad"] : r < 0.35 ? ["quasi finito","warn"] : ["ok","ok"];
-  return '<div class="pitem s-' + st[1] + '"><div class="top2"><div class="nm">' + esc(it.n) + '</div><div class="tr"><span class="chip ' + st[1] + '">' + st[0] + '</span><button class="ibtn" data-a="iedit" data-i="' + it.id + '" aria-label="Modifica ' + esc(it.n) + '">✎</button></div></div>' +
+  return '<div class="pitem s-' + st[1] + '"><div class="top2"><div class="nm">' + esc(ico(it) + it.n) + '</div><div class="tr"><span class="chip ' + st[1] + '">' + st[0] + '</span><button class="ibtn" data-a="iedit" data-i="' + it.id + '" aria-label="Modifica ' + esc(it.n) + '">✎</button></div></div>' +
     '<div class="meta">Hai ' + esc(fmt(h, it.u)) + (unused ? " · non serve questa settimana" : " su " + esc(fmt(mx, it.u))) + "</div>" +
     '<div class="track"><i style="width:' + Math.round(Math.min(1, r) * 100) + "%;background:var(--" + st[1] + ')"></i></div>' +
     '<div class="ctrl"><button class="step" data-a="dec" data-i="' + it.id + '" aria-label="Togli">−</button>' +
@@ -1283,7 +1342,7 @@ function viewShop() {
     h += '<section class="group" style="--c:' + storeColor(w) + '"><div class="gh"><h3>' + esc(w) + '</h3><button class="btn ghost small" data-a="buyall" data-w="' + esc(w) + '">Tutto comprato</button></div>';
     byCat(list).forEach(function (c) { h += '<div class="cat" data-c="' + catIdx(c[0]) + '" style="' + catStyle(c[0]) + '">' + esc(c[0]) + "</div>"; c[1].forEach(function (it) {
       const b = buyQty(it), m = missing(it.id);
-      h += '<div class="buyrow"><div><div class="nm">' + esc(it.n) + '</div><div class="meta">Compra ' + (it.u === "%" ? "1 confezione (ti serve il " + esc(fmt(m, it.u)) + ")" : esc(fmt(b, it.u)) + (b !== m ? " (ti servono " + esc(fmt(m, it.u)) + ")" : "")) + '</div></div><div class="tr"><button class="ibtn" data-a="iedit" data-i="' + it.id + '" aria-label="Modifica ' + esc(it.n) + '">✎</button><button class="btn ghost small" data-a="buy" data-i="' + it.id + '">Comprato</button></div></div>';
+      h += '<div class="buyrow"><div><div class="nm">' + esc(ico(it) + it.n) + '</div><div class="meta">Compra ' + (it.u === "%" ? "1 confezione (ti serve il " + esc(fmt(m, it.u)) + ")" : esc(fmt(b, it.u)) + (b !== m ? " (ti servono " + esc(fmt(m, it.u)) + ")" : "")) + '</div></div><div class="tr"><button class="ibtn" data-a="iedit" data-i="' + it.id + '" aria-label="Modifica ' + esc(it.n) + '">✎</button><button class="btn ghost small" data-a="buy" data-i="' + it.id + '">Comprato</button></div></div>';
     }); });
     h += "</section>";
   });
@@ -1400,10 +1459,10 @@ SH.confirm = {
 /* --- ingrediente --- */
 function openItemSheet(mode, o) {
   o = o || {};
-  const d = {n:"", where:CFG.stores[0], cat:CFG.cats[0], u:"g", pack:"", max:"", base:"", have:"", qty:"", nw:"", nc:""};
+  const d = {n:"", where:CFG.stores[0], cat:CFG.cats[0], u:"g", pack:"", max:"", base:"", have:"", qty:"", nw:"", nc:"", emo:"", emoT:false};
   if (mode === "edit") {
     const it = IT[o.id];
-    d.n = it.n; d.where = it.where; d.cat = it.cat; d.u = it.u;
+    d.n = it.n; d.where = it.where; d.cat = it.cat; d.u = it.u; d.emo = emojiOf(it); d.emoT = it.emo !== undefined;
     d.pack = it.exact ? "" : String(it.pack); d.max = it.max > 0 ? String(it.max) : "";
     d.base = it.base > 0 ? String(rnd(it.base / (it.per || 1))) : "";
   }
@@ -1415,7 +1474,7 @@ SH.item = {
     const d = s.draft, m = s.mode, it = m === "edit" ? IT[s.id] : null;
     const legacy = it && (it.per || it.u === "%");
     const unitList = UNITS.indexOf(d.u) >= 0 ? UNITS : UNITS.concat([d.u]);
-    let b = fld("Nome", '<input data-f="n" value="' + esc(d.n) + '" placeholder="es. Latte" autocomplete="off"' + (m === "spesa" ? ' list="itemlist"' : "") + ">", null, null, {c:2, k:"n"});
+    let b = '<div style="display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:10px;align-items:start">' + fld("Nome", '<input data-f="n" value="' + esc(d.n) + '" placeholder="es. Latte" autocomplete="off"' + (m === "spesa" ? ' list="itemlist"' : "") + ">", null, null, {c:2, k:"n"}) + fld("Emoji", '<input data-f="emo" id="emo-in" value="' + esc(d.emo) + '" maxlength="8" placeholder="auto" autocomplete="off" style="text-align:center;font-size:22px">', null, "emo-w", {c:0}) + "</div>";
     if (m === "spesa") b += '<datalist id="itemlist">' + ITEMS.map(function (x) { return '<option value="' + esc(x.n) + '">'; }).join("") + '</datalist><p class="hint" id="ihint"></p>' +
       fld("Quanta ne devi comprare", '<div class="inl"><input data-f="qty" inputmode="decimal" value="' + esc(d.qty) + '" placeholder="es. 2"><span class="un" id="qunit"></span></div>', null, null, {c:9, k:"qty"});
     b += '<div class="stack" id="newf">';
@@ -1442,7 +1501,9 @@ SH.item = {
     const w = document.getElementById("nw-where"), c = document.getElementById("nw-cat");
     if (w) w.hidden = d.where !== "__new__";
     if (c) c.hidden = d.cat !== "__new__";
+    if (!d.emoT) { d.emo = guessEmoji(d.n); const ei = document.getElementById("emo-in"); if (ei && ei.value !== d.emo) ei.value = d.emo; }
     if (s.mode === "spesa") {
+      const ew = document.getElementById("emo-w"); if (ew) ew.hidden = !!findItemByName(d.n);
       const ex = findItemByName(d.n), nf = document.getElementById("newf"), hint = document.getElementById("ihint"), qu = document.getElementById("qunit");
       if (nf) nf.hidden = !!ex;
       if (hint) hint.textContent = ex ? "Già nel tuo elenco: lo aggiungo alla spesa." : (trim(d.n) ? "Nuovo ingrediente: scegli dove si compra." : "");
@@ -1472,6 +1533,7 @@ SH.item = {
     const it = m === "edit" ? IT[s.id] : {id:uid("i"), exact:true, base:0, pack:1};
     const oldU = it.u;
     it.n = name; it.where = where; it.cat = cat;
+    if (d.emoT) it.emo = trim(d.emo); else delete it.emo;
     if (!(it.per || it.u === "%")) it.u = d.u;
     const pk = toNum(d.pack);
     it.pack = pk > 0 ? pk : (it.pack || 1); it.exact = !(pk > 0);
@@ -1502,7 +1564,7 @@ SH.item = {
 function openDishSheet(fid, o) {
   o = o || {};
   const f = fid ? FOODS[fid] : null;
-  const d = f ? {n:f.n, kind:f.kind, yield:(f.yield > 2 ? "+" : String(f.yield === 2 ? 2 : 1)), yieldN:(f.yield > 2 ? String(f.yield) : ""), time:f.time > 0 ? String(f.time) : "", ing:(f.ing || []).filter(function (p) { return IT[p[0]]; }).map(function (p) { return {id:p[0], q:String(rnd(p[1] / (IT[p[0]].per || 1)))}; }), ingText:(f.ingText || []).join("\n"), steps:(f.steps && f.steps.length ? f.steps.slice() : [""]), tip:f.tip || "", seed:f.seed || 0}
+  const d = f ? {n:f.n, kind:f.kind, yield:(f.yield > 2 ? "+" : String(f.yield === 2 ? 2 : 1)), yieldN:(f.yield > 2 ? String(f.yield) : ""), time:f.time > 0 ? String(f.time) : "", ing:(f.ing || []).filter(function (p) { return IT[p[0]]; }).map(function (p) { return {id:p[0], q:String(rnd(p[1] / (IT[p[0]].per || 1)))}; }), ingText:(f.ingText || []).join("\n"), steps:(f.steps && f.steps.length ? f.steps.map(function (t) { return linkSteps(f, t); }) : [""]), tip:f.tip || "", seed:f.seed || 0}
     : {n:o.name || "", kind:o.kind || "piatto", yield:"1", yieldN:"", time:"", ing:[], ingText:"", steps:[""], tip:"", seed:0};
   openSheet({type:"dish", id:fid || null, draft:d, entry:o.entry || null, onDone:o.onDone});
 }
@@ -1518,13 +1580,13 @@ SH.dish = {
     let ing = '<div class="stack">';
     d.ing.forEach(function (r, i) {
       const it = IT[r.id];
-      ing += '<div class="irow"><div class="iname">' + esc(it ? it.n : "?") + '</div><input data-f="ing" data-k="q" data-i="' + i + '" inputmode="decimal" value="' + esc(r.q) + '" placeholder="quanto"' + (ERR.rows && ERR.rows[i] ? ' class="bad"' : "") + '><span class="un">' + esc(it ? (it.per ? it.u : runit(it)) : "") + '</span><button class="ibtn" data-a="ing-del" data-i="' + i + '" aria-label="Togli">✕</button></div>';
+      ing += '<div class="irow"><div class="iname">' + esc(it ? ico(it) + it.n : "?") + '</div><input data-f="ing" data-k="q" data-i="' + i + '" inputmode="decimal" value="' + esc(r.q) + '" placeholder="quanto"' + (ERR.rows && ERR.rows[i] ? ' class="bad"' : "") + '><span class="un">' + esc(it ? (it.per ? it.u : runit(it)) : "") + '</span><button class="ibtn" data-a="ing-del" data-i="' + i + '" aria-label="Togli">✕</button></div>';
     });
     const avail = ITEMS.filter(function (x) { return !d.ing.some(function (r) { return r.id === x.id; }); }).sort(function (a, c) { return a.n.localeCompare(c.n, "it"); });
     ing += '<select data-f="ingadd"><option value="">+ Aggiungi un ingrediente…</option><option value="__new__">➕ Nuovo ingrediente…</option>' + avail.map(function (x) { return '<option value="' + x.id + '">' + esc(x.n) + "</option>"; }).join("") + "</select></div>";
     b += fld("Ingredienti", ing, "Quantità per tutta la cottura (se è dose doppia, per entrambe le porzioni). Servono per calcolare la spesa.", null, {c:6, k:"ing"});
     b += fld("Altre note sugli ingredienti", '<textarea data-f="ingText" rows="2" placeholder="Una per riga, es. 2 fette di pane">' + esc(d.ingText) + "</textarea>", "Non vengono contate nella spesa.", null, {c:7});
-    b += fld("Come si fa", stepsEditor("steps", d.steps, "Aggiungi un passaggio", "Descrivi il passaggio", true), null, null, {c:8});
+    b += fld("Come si fa", stepsEditor("steps", d.steps, "Aggiungi un passaggio", "Descrivi il passaggio", true), "Le quantità scritte prima del nome di un ingrediente (es. «250 g di riso») si aggiornano da sole quando cambi la quantità negli ingredienti.", null, {c:8});
     b += fld("Consiglio", '<textarea data-f="tip" rows="2">' + esc(d.tip) + "</textarea>", null, null, {c:9, opt:true});
     if (s.id) b += '<div class="stack"><button class="btn ghost" data-a="saveasnew">Salva come nuovo piatto</button><p class="hint">Utile se vuoi una tua versione senza cambiare quella originale' + (s.entry ? ": il pasto di oggi userà la copia" : "") + '.</p><button class="btn ghost danger" data-a="dish-del">Elimina il piatto</button></div>';
     return shell(s.id ? "Modifica ricetta" : "Nuovo piatto", b, '<button class="btn ghost" data-a="sclose">Annulla</button><button class="btn" data-a="ssave">Salva</button>', false, 0);
@@ -1870,6 +1932,7 @@ function onSheetField(e) {
     return true;
   }
   setField(t);
+  if (t.dataset.f === "emo") s.draft.emoT = true;
   clearErr(s, t);
   if (SH[s.type].sync) SH[s.type].sync(s);
   if (s.type === "dish" && t.dataset.f === "yield" && t.value === "+") { const y = document.getElementById("y-n"); if (y) y.focus(); }
