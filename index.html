@@ -1,4 +1,6 @@
 <!doctype html><html><head><meta charset=utf8><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Mangia la pappa"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<div id="splash" aria-hidden="true"><div class="sp-e">🍝</div><div class="sp-t">mangia la pappa</div></div>
+<script>(function(){var t0=Date.now();function done(){var e=document.getElementById("splash");if(!e||e.dataset.x)return;e.dataset.x=1;e.classList.add("out");setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e)},500)}window.addEventListener("load",function(){setTimeout(done,Math.max(0,1300-(Date.now()-t0)))});setTimeout(done,3500)})();</script>
 <title>Mangia la pappa</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -400,6 +402,16 @@ details.group.rec{padding:4px 10px;border-top-width:4px;margin-top:-6px}details.
 .srow.num{grid-template-columns:26px minmax(0,1fr) 36px}
 .srow.num.solo{grid-template-columns:26px minmax(0,1fr)}
 .sn{width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--f-mono);font-size:11px;display:grid;place-items:center;margin-top:10px}
+/* ---- schermata di apertura ---- */
+#splash{position:fixed;inset:0;z-index:99999;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .45s ease}
+#splash.out{opacity:0;pointer-events:none}
+#splash .sp-e{font-size:88px;line-height:1;filter:drop-shadow(0 10px 16px rgba(0,0,0,.12));animation:sp-pop .75s cubic-bezier(.2,.9,.25,1) both;transition:transform .45s ease}
+#splash.out .sp-e{transform:scale(1.12)}
+#splash .sp-t{font:500 13px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;letter-spacing:.14em;color:#8a8a8e;text-transform:lowercase;animation:sp-up .6s .45s ease both}
+@keyframes sp-pop{0%{transform:scale(.3) rotate(-10deg);opacity:0}55%{transform:scale(1.14) rotate(4deg);opacity:1}80%{transform:scale(.97) rotate(-1deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes sp-up{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#splash .sp-e,#splash .sp-t{animation:none}#splash.out .sp-e{transform:none}}
+
 </style>
 
 <div class="wrap">
