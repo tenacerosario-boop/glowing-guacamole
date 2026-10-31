@@ -723,7 +723,7 @@ const DAYS = [
   { k:"sab", cook:[], time:0, order:[],
     meals:{ col:{f:"pane_burro"}, pr:{f:"boscaiola", from:"ven"}, ce:{f:"torta", from:"ven"}, sp:{f:"s_yogurt_frutta"} },
     store:[],
-    extra:{ t:"Giorno della spesa", b:"Vai al mercato la mattina: Porta Palazzo è chiuso la domenica. Poi passa al discount per il resto.", cta:"Apri la spesa", tab:"spesa" } },
+    extra:{ t:"Giorno della spesa", b:"Vai al mercato la mattina, è chiuso la domenica. Poi passa al discount per il resto.", cta:"Apri la spesa", tab:"spesa" } },
   { k:"dom", cook:["pesto","cantonese"], time:35,
     order:[
       "A pranzo: lessa pasta e fagiolini, condisci con il pesto e aggiungi l'uovo sodo (15 minuti).",
@@ -778,8 +778,16 @@ function sanitizeCfg(c) {
 
 /* ---------- configurazione attiva ---------- */
 let CFG = null, ITEMS = [], FOODS = {}, PLAN = {}, DAYM = {}, IT = {}, NEED = {}, RECNEED = {};
+function cleanPP(o) {
+  Object.keys(o || {}).forEach(function (k) {
+    const v = o[k];
+    if (typeof v === "string") o[k] = v.replace(/la mattina:\s*Porta Palazzo è chiuso/gi, "la mattina, è chiuso").replace(/Porta Palazzo/gi, "il mercato");
+    else if (v && typeof v === "object") cleanPP(v);
+  });
+}
 function rebuild() {
   ITEMS = CFG.items; FOODS = CFG.foods; PLAN = CFG.plan; DAYM = CFG.days;
+  cleanPP(DAYM);
   IT = {}; ITEMS.forEach(function (x) {
     IT[x.id] = x;
     if (CFG.stores.indexOf(x.where) < 0) CFG.stores.push(x.where);
@@ -2006,6 +2014,8 @@ const local = loadLocal();
 if (local) { state = local; Persist.mode = "local"; }
 CFG = cfgFromState(); rebuild();
 applyHash();
+ui.day = todayKey();
+try { if (KEYS.indexOf((location.hash || "").replace("#", "")) >= 0) location.hash = ui.day; } catch (e) {}
 render();
 
 (async function connect() {
